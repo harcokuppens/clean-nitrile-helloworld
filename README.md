@@ -4,19 +4,18 @@
 This is a Clean example project that uses a clean distribution installed with the `nitrile` tool.
 The project includes a simple “Hello, World!” console application, but it can also serve as a template for building other projects using `nitrile`.
 
-To install nitrile see https://clean-lang.org/about.html#install .
+This project can be used using a devcontainer which automatically setups a development environment with nitrile and Clean for you in a docker container from which you can directly start developing. (see section below)
 
-To use nitrile to install clean and clean libraries, and build clean projects see https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
+However you offcourse can use this project on your local machine by install nitrile and clean yourself.
+* to install nitrile see https://clean-lang.org/about.html#install .
+* to use nitrile to install Clean and Clean libraries, and build clean projects see https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
 
-# iTasks-template
-
-This is an iTasks template project which contains an environment to develop iTasks applications using docker develop containers.
 
 ## VSCode Development Environment Installation Guide
 
 This project is meant to be used through a development environment which can be setup using Docker.
 
-The development environment allows to develop iTasks applications on Linux, macOS or Windows.
+The development environment allows to develop Clean applications on Linux, macOS or Windows.
 
 The installation guide is based on [the official documentation](https://code.visualstudio.com/docs/remote/containers).
 
@@ -38,11 +37,11 @@ The installation guide is based on [the official documentation](https://code.vis
 
 4. Clone the project using
 
-   `git clone https://gitlab.com/clean-and-itasks/itasks-template`
+   `git clone https://github.com/harcokuppens/clean-nitrile-helloworld`
 
    or the SSH equivalent
 
-   `git clone git@gitlab.com:clean-and-itasks/itasks-template.git`
+   `git clone git@github.com:harcokuppens/clean-nitrile-helloworld.git`
 
    Afterwards, open the root directory of the repository in VSCode using the command
 
@@ -50,9 +49,9 @@ The installation guide is based on [the official documentation](https://code.vis
 
 5. A message should pop up offering to open the repository within a development container, do so.
 
-6. Open the root folder of the itasks-template repository within a devcontainer terminal if it is not already open, using the command:
+6. Open the root folder of the clean-nitrile-helloworld repository within a devcontainer terminal if it is not already open, using the command:
 
-   `cd itasks-template`
+   `cd clean-nitrile-helloworld`
 
 7. After the development container is built,
    verify that everything is working by opening a terminal within VSCode and running:
@@ -105,21 +104,21 @@ under the home (`~`) directory.
 
 4. Clone the project by performing the following command:
 
-   `git clone https://gitlab.com/clean-and-itasks/itasks-template`
+   `git clone https://github.com/harcokuppens/clean-nitrile-helloworld.git`
 
    or the SSH equivalent
 
-   `git clone git@gitlab.com:clean-and-itasks/itasks-template.git`
+   `git clone git@github.com:harcokuppens/clean-nitrile-helloworld.git`
 
    in the wsl terminal.
 
-5. Run `code itasks-template` in the linux terminal to open the repository in VSCode.
+5. Run `code clean-nitrile-helloworld` in the linux terminal to open the repository in VSCode.
 
 6. A message should pop up offering to open the repository within a development container, do so.
 
-7. Open the root folder of the itasks-template repository within a devcontainer terminal if it is not already open, using the command:
+7. Open the root folder of the clean-nitrile-helloworld repository within a devcontainer terminal if it is not already open, using the command:
 
-   `cd itasks-template`
+   `cd clean-nitrile-helloworld`
 
 8. After the development container is built,
    verify that everything is working by opening a terminal within VSCode and running:
