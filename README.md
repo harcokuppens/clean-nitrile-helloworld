@@ -10,6 +10,8 @@ However you offcourse can use this project on your local machine by install nitr
 * to install nitrile see https://clean-lang.org/about.html#install .
 * to use nitrile to install Clean and Clean libraries, and build clean projects see https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
 
+There is also a similar repository where we build the same HelloWorld Clean code using a clean installation from https://clean.cs.ru.nl/ and build with the `clm` tool at: https://github.com/harcokuppens/clean-clm-helloworld.git .
+
 
 ## VSCode Development Environment Installation Guide
 
