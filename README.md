@@ -1,3 +1,13 @@
+
+# HelloWorld Clean console application build using `nitrile`  
+
+This is a Clean example project that uses a clean distribution installed with the `nitrile` tool.
+The project includes a simple “Hello, World!” console application, but it can also serve as a template for building other projects using `nitrile`.
+
+To install nitrile see https://clean-lang.org/about.html#install .
+
+To use nitrile to install clean and clean libraries, and build clean projects see https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
+
 # iTasks-template
 
 This is an iTasks template project which contains an environment to develop iTasks applications using docker develop containers.
