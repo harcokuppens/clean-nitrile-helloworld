@@ -3,7 +3,7 @@
     "linux-x64": [
       {
         "name": "abc-interpreter",
-        "version": "1.6.0"
+        "version": "1.6.1"
       },
       {
         "name": "argenv",
@@ -23,7 +23,7 @@
       },
       {
         "name": "base-compiler",
-        "version": "4.0.1"
+        "version": "4.0.2"
       },
       {
         "name": "base-lib",
@@ -47,7 +47,7 @@
       },
       {
         "name": "containers",
-        "version": "2.4.0"
+        "version": "2.5.0"
       },
       {
         "name": "graph-copy",
