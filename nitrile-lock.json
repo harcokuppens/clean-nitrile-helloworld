@@ -2,16 +2,12 @@
   "packages": {
     "linux-x64": [
       {
-        "name": "abc-interpreter",
-        "version": "1.6.1"
-      },
-      {
         "name": "argenv",
         "version": "1.0.3"
       },
       {
         "name": "base",
-        "version": "3.0.0"
+        "version": "2.1.0"
       },
       {
         "name": "base-clm",
@@ -23,35 +19,87 @@
       },
       {
         "name": "base-compiler",
-        "version": "4.0.2"
+        "version": "3.3.0"
       },
       {
         "name": "base-lib",
-        "version": "2.12.0"
+        "version": "2.15.0"
       },
       {
         "name": "base-rts",
-        "version": "3.0.2"
+        "version": "3.0.3"
       },
       {
         "name": "base-stdenv",
         "version": "2.1.1"
       },
       {
-        "name": "base64",
-        "version": "1.0.5"
-      },
-      {
         "name": "category-theory",
         "version": "1.2.0"
       },
       {
-        "name": "containers",
-        "version": "2.5.0"
+        "name": "clean-platform",
+        "version": "0.4.0"
       },
       {
-        "name": "graph-copy",
-        "version": "3.0.5"
+        "name": "containers",
+        "version": "2.8.0"
+      },
+      {
+        "name": "generic-hash",
+        "version": "1.0.3"
+      },
+      {
+        "name": "generic-print",
+        "version": "3.2.1"
+      },
+      {
+        "name": "geometry",
+        "version": "1.0.1"
+      },
+      {
+        "name": "html",
+        "version": "2.1.1"
+      },
+      {
+        "name": "http",
+        "version": "1.1.1"
+      },
+      {
+        "name": "json",
+        "version": "3.1.1"
+      },
+      {
+        "name": "lib-compiler",
+        "version": "3.0.2"
+      },
+      {
+        "name": "linux",
+        "version": "1.0.2"
+      },
+      {
+        "name": "parser-combinators",
+        "version": "1.1.1"
+      },
+      {
+        "name": "posix",
+        "version": "1.2.0"
+      },
+      {
+        "name": "syscall",
+        "version": "1.0.3"
+      },
+      {
+        "name": "system",
+        "version": "2.2.3"
+      },
+      {
+        "name": "tcpip",
+        "version": "2.1.4"
+      },
+      {
+        "name": "text",
+        "version": "2.0.2"
       }
     ]
   }

@@ -1,5 +1,6 @@
 {
 	"image": "cleanlang/devcontainer:latest",
 	"customizations": {"vscode": {"extensions": ["TOPSoftware.clean-vs-code", "eamodio.gitlens"]}},
+    "remoteEnv": { "PATH": "${containerEnv:PATH}:${containerWorkspaceFolder}/bin-nitrile/" },
 	"onCreateCommand": "/onStartup.sh"
 }

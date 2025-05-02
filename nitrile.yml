@@ -9,12 +9,9 @@ version: 1.0.0
 type: Application
 src:
   - src
+  - src/WrapDebug
 dependencies:
-  base: ^3
-#  itasks: ^0.16.0
-  argenv: ^1.0.3
-  abc-interpreter: ^1.6.0
-  # system: ^2.2.3
+  clean-platform: ^0.4.0
 package:
   extra_files:
     - CHANGELOG.md
@@ -22,7 +19,7 @@ package:
     - README.md
 clm_options:
   compiler: cocl
-  fusion: GenericFusion
+#  fusion: GenericFusion
 build:
   application:
     script:
