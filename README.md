@@ -25,7 +25,9 @@ at: https://github.com/harcokuppens/clean-clm-helloworld.git .
 The HelloWorld program asks for you name and prints 'Hello NAME'. In the example we
 also added some debug trace expressions to show how you can debug your programs with
 tracing. For details about debugging see the document
-[Debugging in Clean](./Debugging.md).
+[Debugging in Clean](./Debugging.md). To demonstrate tracing in more detail we
+applied in the alternative Clean program `HelloWorldDebug.icl` more advanced trace
+statements.
 
 ## License
 

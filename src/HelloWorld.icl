@@ -24,7 +24,7 @@ Start w
         // =  abort usage_msg  // does 'abort' with exit code and print usage message to stdout
 
     // cmdline arguments handling
-    # name = argv.[1]                                                  // trace statements;  prefer using ->> operator because it outputs to stderr, but it does not always works, then you can use  ->>- operator which outputs to stdout
+    # name = argv.[1]                                                  // trace expressions;  prefer using ->> operator because it outputs to stderr, but it does not always works, then you can use  ->>- operator which outputs to stdout
     // open console
     # (console,w) = stdio w                                            ->> ("DEBUG:1: name",name)  // last part is trace expression added to the line with the ->> operator which outputs to stderr
     //                                                                                             // print name to stderr here because name is not yet defined on the previous line
@@ -36,7 +36,7 @@ Start w
     // we must close stderr to get it printed (otherwise compiler think stderr is not used and optimizes all program code with it away)
     # w = file_close  stderr  w
 
-	= w // return world
+    = w // return world
 
 
 

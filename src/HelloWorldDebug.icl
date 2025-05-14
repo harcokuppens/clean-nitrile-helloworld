@@ -35,7 +35,7 @@ Start w
 
     // cmdline arguments handling
     // open console
-    # name = argv.[1];                                            // trace statements;  prefer using ->> operator because it outputs to stderr, but it does not always works, then you can use  ->>- operator which outputs to stdout
+    # name = argv.[1];                                            // trace expressions;  prefer using ->> operator because it outputs to stderr, but it does not always works, then you can use  ->>- operator which outputs to stdout
     # (console,w) = ctrace_n ("DEBUG:3a: name",name)  stdio w       ->> ("DEBUG:3b: name",name); // last part is trace expression added to the line with the ->> operator which outputs to stderr
     //                                                                                           // print name to stderr here because name is not yet defined on the previous line
     # console = console <<< "Hello " <<< name <<< "\n"              ->>- ("DEBUG:4: argv",argv); // last part is trace expression added to the line with the ->>- operator which outputs to stdout  (note: ->> does not work with argv)
@@ -54,7 +54,6 @@ Start w
     // we must close stderr to get it printed (otherwise compiler think stderr is not used and optimizes all program code with it away)
     # w = file_close  stderr  w;
 
-	//= w;
     | ctrace_tn  ("DEBUG:9: again_name",name)
         = w; // return world
 
