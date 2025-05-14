@@ -7,7 +7,7 @@ but it can also serve as a template for building other projects using `nitrile`.
 This project can be used using a devcontainer which automatically setups a
 development environment with nitrile and Clean for you in a docker container from
 which you can directly start developing. For installation instructions see the
-[VSCode Development Environment Installation Guide](#DevContainer.md)
+[VSCode Development Environment Installation Guide](./DevContainer.md)
 
 However you offcourse can use this project on your local machine by installing
 nitrile and Clean yourself.
@@ -25,7 +25,7 @@ at: https://github.com/harcokuppens/clean-clm-helloworld.git .
 The HelloWorld program asks for you name and prints 'Hello NAME'. In the example we
 also added some debug trace expressions to show how you can debug your programs with
 tracing. For details about debugging see the document
-[Debugging in Clean](#Debugging.md).
+[Debugging in Clean](./Debugging.md).
 
 ## License
 
