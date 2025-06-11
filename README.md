@@ -54,7 +54,10 @@ both the tools as the libraries in the project are versioned in nitrile packages
 In the examples subfolder are some examples from the classic Clean distribution which
 can also be tried out instead of `HelloWorld.icl`. You need to copy the `.icl` file
 from the examples folder to the src folder, and adapt the `main` name in the
-`nitrile.yml` file.
+`nitrile.yml` file. It could be that you need to apply a small modification to the source, 
+because nitrile may have the modules little bit different organized in nitrile packages,
+then in the classic Clean distribution.
+
 
 ## Added Nitrile commands
 
