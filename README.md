@@ -17,8 +17,9 @@ nitrile and Clean yourself.
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
 
 There is also a similar repository where we build the same HelloWorld Clean code
-using a clean installation from https://clean.cs.ru.nl/ and build with the `clm` tool
-at: https://github.com/harcokuppens/clean-clm-helloworld.git .
+using the classic Clean distribution from https://clean.cs.ru.nl/ 
+at https://github.com/harcokuppens/clean-classic-helloworld.git which builds 
+the Clean code using `clm` directly instead of with `nitrile build` .
 
 ## HelloWorld program
 
