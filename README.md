@@ -25,9 +25,132 @@ at: https://github.com/harcokuppens/clean-clm-helloworld.git .
 The HelloWorld program asks for you name and prints 'Hello NAME'. In the example we
 also added some debug trace expressions to show how you can debug your programs with
 tracing. For details about debugging see the document
-[Debugging in Clean](./Debugging.md). To demonstrate tracing in more detail we
-applied in the alternative Clean program `HelloWorldDebug.icl` more advanced trace
-statements.
+[Debugging in Clean](./Debugging.md). To demonstrate tracing in more detail we also
+include the alternative Clean program `HelloWorldDebug.icl`.
+
+The Helloworld project has as dependency the nitrile meta package
+[`clean-platform`](https://clean-lang.org/pkg/clean-platform/) which installs for you
+many of the standard libraries coming with the classic Clean distribution. This
+dependency includes too much, but is convenient when starting developing. Later when
+releasing your project you can fine tune the dependencies to the specific nitrile
+packages really required.
+
+## Build project with Nitrile
+
+Nitrile is both a package manager as a build tool for Clean projects. To build the
+`HelloWorld` project you have to run the following Nitrile commands:
+
+    nitrile update   # updates the registry of available packages
+    nitrile fetch    # installs the required packages described in nitrile.yml
+                     # as dependencies in the local nitrile-packages/ folder
+    nitrile build    # builds the Clean project
+
+Note that nitrile also installs the Clean compiler as one of its required packages in
+the project. Then the `nitrile build` command can use it to build the project. So
+both the tools as the libraries in the project are versioned in nitrile packages.
+
+## Other examples
+
+In the examples subfolder are some examples from the classic Clean distribution which
+can also be tried out instead of `HelloWorld.icl`. You need to copy the `.icl` file
+from the examples folder to the src folder, and adapt the `main` name in the
+`nitrile.yml` file.
+
+## Added Nitrile commands
+
+On https://clean-lang.org/about.html it says :
+
+    Nitrile is a package manager and build tool for Clean.
+    It is used to manage dependencies, interact with the package
+    registry, and build applications.
+
+However when I look at the commands that nitrile supports it misses commands to list
+the packages installed in the project, to search for a package, to get info about a
+package and to install or uninstall a package.
+
+Therefore in the folder bin-nitrile/ I added the following commands to add this
+missing functionality to nitrile:
+
+    nitrile-version   - list the version of nitrile and the version of the
+                        clean compiler,runtime,lib,stdenv,code-generator,clm
+    nitrile-list      - list packages installed in the current project
+                        with their version numbers
+    nitrile-registry  - list packages in the registry with their
+                        latest version numbers
+    nitrile-search    - search for package in the registry using a search term
+    nitrile-info      - display information about a package
+    nitrile-install   - install a package, when version is omitted,
+                        the latest version is installed
+    nitrile-uninstall - uninstall a package, the installed version is uninstalled
+    nitrile-get       - download package
+    nitrile-eastwood  - generate Eastwood.yml file for the current project
+    nitrile-root      - determine the root directory of the nitrile project
+    nitrile-target    - determine the target platform for the nitrile package manager
+
+## Clean documentation
+
+- For an introduction to functional programming in Clean read the book
+  [Functional Programming in Clean](doc/2002_Functional_Programming_in_Clean.pdf)
+- The ideas behind Clean and its implementation on sequential and parallel machine
+  architectures are explained in detail in the following textbook:
+  [Functional Programming and Parallel Graph Rewriting](doc/1993_Functional_Programming_and_Parallel_Graph_Rewriting.pdf)
+- A description of the syntax and semantics of Clean can be found in the
+  [Clean Language Report](doc/2021_CleanLanguageReport_Version3.0.pdf). The latest
+  version can be found online at https://cloogle.org/doc/ .
+- [Clean for Haskell programmers](2024_Clean_for_Haskell_Programmers.pdf)
+- [A Concise Guide to Clean StdEnv (standard library)](doc/2018_ConciseGuideToClean3xStdEnv.pdf)
+
+## Essential Resources for Clean Language Development
+
+The Clean Language ecosystem offers several valuable resources for developers. Here's
+a breakdown of key websites and their functionalities:
+
+### [Clean-Lang.org](https://clean-lang.org)
+
+This website is your central hub for **Nitrile package management**.
+
+- **Package Registry**: Find and browse a comprehensive
+  [registry of Nitrile packages](https://clean-lang.org/).
+- **Installation Guide**: Learn how to install Clean Nitrile on the
+  [About page](https://clean-lang.org/about.html).
+- **Package Information**:
+  - **Website**: Get detailed information about specific packages at
+    `https://clean-lang.org/pkg/$PACKAGE/`. (e.g.
+    [`clean-platform`](https://clean-lang.org/pkg/clean-platform/)).
+  - **JSON API**:
+    - **All Packages**: Access a JSON registry of all packages at
+      `https://clean-lang.org/api/packages`. This is the same URL `nitrile update`
+      uses to fetch the registry.
+    - **All Packages with Full Metadata & Dependencies**: Retrieve comprehensive
+      information, including full metadata and dependencies, from
+      `https://clean-lang.org/api/packages?with_full_metadata=true&with_dependencies=true`.
+    - **Single Package**: Get JSON information for a specific package at
+      `https://clean-lang.org/api/packages/$PACKAGE`. (e.g.
+      [`clean-platform`](https://clean-lang.org/api/packages/clean-platform))
+
+### [Cloogle.org](https://cloogle.org/)
+
+Cloogle is your go-to for **searching and browsing Clean Language source libraries
+and common problems**.
+
+- **Source Library Search**: Easily [search](https://cloogle.org/) through Clean
+  Language source code.
+- **Common Problems**: Cloogle also helps you find solutions to common problems, with
+  the problem information sourced from
+  [`https://gitlab.com/cloogle/common-problems`](https://gitlab.com/cloogle/common-problems).
+- **Browse Source Code**: Explore Clean Language source code directly at
+  [`https://cloogle.org/src`](https://cloogle.org/src).
+
+### [Nitrile documentation](https://clean-and-itasks.gitlab.io/nitrile/)
+
+Documentation website of the Nitrile tool for Clean.  
+Nitrile is a package manager and build tool for Clean. It is used to manage
+dependencies, interact with the package registry, and build applications.
+
+### [Guides and hints to work with the Clean](https://top-software.gitlab.io/clean-lang/)
+
+This website contains a collection of guides and hints to work with the Clean
+programming language.
 
 ## License
 
