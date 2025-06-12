@@ -187,7 +187,7 @@ The `nitrile-eastwood` command looks at your nitrile project configuration to ge
 Please note that the devcontainer is built specifically for the `x64` architecture. Nevertheless, it works seamlessly on Mac and Windows machines with the `ARM64` architecture thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
 
 
-### Platforms the Clean compiler supports
+### Platforms nitrile supports
 
 The nitrile tool only supports `x64` Clean installations. For Linux `x86`, Windows `x64` and Macos `x64` you can compile the `x64` binary with the nitrile tool using the Clean compiler for that platform. 
 
