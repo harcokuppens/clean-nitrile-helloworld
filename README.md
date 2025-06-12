@@ -15,6 +15,8 @@ nitrile and Clean yourself.
 - to install nitrile see https://clean-lang.org/about.html#install .
 - to use nitrile to install Clean and its libraries, and build Clean projects see
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
+- add `bin-nitrile` to your path with `export PATH=$PWD/bin-nitrile:$PATH`   \
+  This gives you access to the extra nitrile commands in this project.
 
 There is also a similar repository where we build the same HelloWorld Clean code
 using the 'classic' Clean distribution from https://clean.cs.ru.nl/ 
