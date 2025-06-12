@@ -21,7 +21,9 @@ nitrile and Clean yourself.
 There is also a similar repository where we build the same HelloWorld Clean code
 using the 'classic' Clean distribution from https://clean.cs.ru.nl/ 
 at https://github.com/harcokuppens/clean-classic-helloworld.git which builds 
-the Clean code using `clm` directly instead of with `nitrile build` .
+the Clean code using `clm` directly instead of with `nitrile build` . 
+
+Compared to the 'classic' Clean distribution, the nitrile tool gives you a modern way to install the Clean compiler/runtime and its libraries as versioned packages from an online package repository. Everything is versioned, allowing you to rebuild your project with the exact same version of compiler/runtime and libraries. The nitrile repository allows for per library version updates, and gives more easily support for third party libraries.  
 
 ## HelloWorld program
 
