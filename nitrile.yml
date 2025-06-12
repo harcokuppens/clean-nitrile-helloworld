@@ -1,8 +1,8 @@
 format_version: 0.4.22
-name: itasks-template
-url: https://gitlab.com/top-software/itasks-template/
-maintainer: TOP Software Technology
-contact_email: support@top-software.nl
+name: clean-nitrile-console-template
+url: https://github.com/harcokuppens/clean-nitrile-helloworld
+maintainer: Harco Kuppens
+contact_email: h.kuppens@cs.ru.nl
 description: A clean template project which contains an environment to develop console clean applications.
 license: BSD-2-Clause
 version: 1.0.0

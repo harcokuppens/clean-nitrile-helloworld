@@ -17,7 +17,7 @@ nitrile and Clean yourself.
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
 
 There is also a similar repository where we build the same HelloWorld Clean code
-using the classic Clean distribution from https://clean.cs.ru.nl/ 
+using the 'classic' Clean distribution from https://clean.cs.ru.nl/ 
 at https://github.com/harcokuppens/clean-classic-helloworld.git which builds 
 the Clean code using `clm` directly instead of with `nitrile build` .
 
@@ -155,6 +155,53 @@ dependencies, interact with the package registry, and build applications.
 
 This website contains a collection of guides and hints to work with the Clean
 programming language.
+
+
+
+## Installation details
+
+### The Eastwood language server for vscode
+
+The project provides a ready-to-use environment for developing Clean applications using Docker development container via a devcontainer.
+
+The development container (devcontainer) uses Nitrile to install the Eastwood language server.
+The Eastwood language server is compatible with all Clean projects, regardless of whether Clean was installed via Nitrile or directly from the Clean website https://clean.cs.ru.nl/. For compiling this project, the `nitrile` command-line tool is used.  The Eastwood language server provides 
+* autocomplete,                               
+* error-checking (diagnostics),  linting             
+* jump-to-definition or declaration
+             
+The HelloWorld project comes with an already configure `Eastwood.yml` configuration file, which specifies all libraries in the
+the nitrile meta package
+[`clean-platform`](https://clean-lang.org/pkg/clean-platform/)  so they are available in the Eastwood language server in vscode. 
+
+The is automatically generated using the command
+
+```
+nitrile-eastwood  - generate Eastwood.yml file for the current project
+```
+
+The `nitrile-eastwood` command looks at your nitrile project configuration to get all project dependencies to make a list of lib paths for in the `Eastwood.yml` configuration file. If you change your nitrile project configuration then also run `nitrile-eastwood` to update Eastwood's configuration. 
+
+Please note that the devcontainer is built specifically for the `x64` architecture. Nevertheless, it works seamlessly on Mac and Windows machines with the `ARM64` architecture thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
+
+
+### Platforms the Clean compiler supports
+
+
+For Linux `x86`, Windows `x64` and Macos `x64` you can compile the `x64` binary with the
+Clean compiler for that platform.  
+
+Clean only has a compiler for the `ARM64` architecture for the linux platform.
+For linux `ARM64` you can compile a native binary using `ARM64` Clean compiler for linux. 
+If your project compiles a static binary then the binary compiled on a `x64` Mac
+also runs fine on a `ARM64` Mac using Rosetta emulation for `x64`, and the binary compiled
+on a `x64` Windows runs fine on a Windows `ARM64` using `x64` emulation. 
+
+The nitrile tool only supports `x64` Clean installations. However on all platforms you can use Clean with Nitrile 
+by using the Docker devcontainer in vscode thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
+You only need to open the project in vscode and then vscode will ask you to open the project in a devcontainer,
+and you can start developing. Very easy.
+
 
 ## License
 
