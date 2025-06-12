@@ -184,7 +184,7 @@ nitrile-eastwood  - generate Eastwood.yml file for the current project
 
 The `nitrile-eastwood` command looks at your nitrile project configuration to get all project dependencies to make a list of lib paths for in the `Eastwood.yml` configuration file. If you change your nitrile project configuration then also run `nitrile-eastwood` to update Eastwood's configuration. 
 
-Please note that the devcontainer is built specifically for the `x64` architecture. Nevertheless, it works seamlessly on Mac and Windows machines with the `ARM64` architecture thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
+Please note that the devcontainer is build specifically for the `x64` architecture. Nevertheless, it works seamlessly on Mac and Windows machines with the `ARM64` architecture thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
 
 
 ### Platforms nitrile supports
