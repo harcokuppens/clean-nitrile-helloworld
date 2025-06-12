@@ -189,20 +189,13 @@ Please note that the devcontainer is built specifically for the `x64` architectu
 
 ### Platforms the Clean compiler supports
 
+The nitrile tool only supports `x64` Clean installations. For Linux `x86`, Windows `x64` and Macos `x64` you can compile the `x64` binary with the nitrile tool using the Clean compiler for that platform. 
 
-For Linux `x86`, Windows `x64` and Macos `x64` you can compile the `x64` binary with the
-Clean compiler for that platform.  
+However `x64` clean builds can be run on none-supported `ARM64` platforms using emulation. If your project compiles a static binary then
+* the binary compiled on a `x64` Mac also runs fine on a `ARM64` Mac using Rosetta emulation for `x64`, and 
+* the binary compiled on a `x64` Windows also runs fine on a Windows `ARM64` using `x64` emulation. 
 
-Clean only has a compiler for the `ARM64` architecture for the linux platform.
-For linux `ARM64` you can compile a native binary using `ARM64` Clean compiler for linux. 
-If your project compiles a static binary then the binary compiled on a `x64` Mac
-also runs fine on a `ARM64` Mac using Rosetta emulation for `x64`, and the binary compiled
-on a `x64` Windows runs fine on a Windows `ARM64` using `x64` emulation. 
-
-The nitrile tool only supports `x64` Clean installations. However on all platforms you can use Clean with Nitrile 
-by using the Docker devcontainer in vscode thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
-You only need to open the project in vscode and then vscode will ask you to open the project in a devcontainer,
-and you can start developing. Very easy.
+The 'classic' Clean distribution supports also [platforms with `ARM64` architecture](https://github.com/harcokuppens/clean-classic-helloworld?tab=readme-ov-file#platforms-the-clean-compiler-supports).
 
 
 ## License
