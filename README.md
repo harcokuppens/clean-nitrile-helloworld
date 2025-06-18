@@ -135,7 +135,7 @@ can also be tried out instead of `HelloWorld.icl`. You need to copy the `.icl` f
 from the examples folder to the src folder, and adapt the `main` name in the
 `nitrile.yml` file. It could be that you need to apply a small modification to the
 source, because nitrile may have the modules little bit different organized in
-nitrile packages, then in the classic Clean distribution. 
+nitrile packages, then in the classic Clean distribution.
 
 ## Clean documentation
 
@@ -231,7 +231,11 @@ nitrile and Clean yourself.
 - to use nitrile to install Clean and its libraries, and build Clean projects see
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
 - add `bin-nitrile` to your path with `export PATH=$PWD/bin-nitrile:$PATH` \
-  This gives you access to the extra nitrile commands in this project.
+  This gives you access to the extra nitrile commands in this project.\
+  We assume however here that you have a bash shell, because the scripts in
+  `bin-nitrile` are bash scripts. To use them on Windows use the
+  https://gitforwindows.org installation which comes with a 'Git Bash' application to
+  open a bash shell.
 - you can
   [use vscode with Clean language support locally](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-windows-or-linux)
 
@@ -282,6 +286,21 @@ then finally you can install the
 ["Clean" extension in vscode](https://marketplace.visualstudio.com/items?itemName=TOPSoftware.clean-vs-code).
 If you then open this project folder with vscode you can edit Clean with the support
 of the Eastwood Language Server in vscode.
+
+For Windows also configure that the terminal within vscode uses the bash shell coming
+with https://gitforwindows.org by adding the following in the `.vscode/settings.json`
+file in your workspace:
+
+```json
+{
+  "terminal.integrated.profiles.windows": {
+    "Git Bash": {
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe"
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "Git Bash"
+}
+```
 
 ### Platforms nitrile supports
 
