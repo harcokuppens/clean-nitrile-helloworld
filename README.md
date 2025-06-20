@@ -76,7 +76,9 @@ to build the project, because all libraries are automatically installed in the
 `nitrile-packages/` folder. As developer you can easily browse and inspect the
 libraries there within your project folder.
 
-To build the project you only have to run:
+To build the project you first have to setup the
+[Clean development environment](#setup-development-environment), and then you only
+have to run:
 
 ```bash
 $ nitrile build
@@ -226,7 +228,7 @@ We advice to use the vscode devcontainer because then you can
 However you offcourse can use this project on your local machine by installing
 nitrile and Clean yourself.
 
-- nitrile only supports x64 Linux and Windows
+- nitrile only supports x64 Linux and x64 Windows
 - to install nitrile see https://clean-lang.org/about.html#install .
 - to use nitrile to install Clean and its libraries, and build Clean projects see
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
