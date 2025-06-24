@@ -7,4 +7,7 @@ HelloWorld
 .vscode
 itasks-*.tar.gz
 nitrile-packages
-bin
+# Ignore everything in the 'bin' directory
+bin/*
+# Except the .gitignore file within the 'bin' directory
+!bin/.gitkeep

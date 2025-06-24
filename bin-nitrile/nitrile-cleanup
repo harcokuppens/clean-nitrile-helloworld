@@ -33,6 +33,9 @@ fi
 echo "INFO: nitrile-cleanup removed builds from the local source files in the project."
 PROJECT_DIR=$(nitrile-root) || exit 1
 rm -rf "$PROJECT_DIR/bin"
+mkdir "$PROJECT_DIR/bin"
+touch "$PROJECT_DIR/bin/.gitkeep"
+
 # cleanup builds in src folders in "Clean System Files" folders
 find "$PROJECT_DIR/src" -name 'Clean System Files' -type d -print0 | xargs -0 -I % rm -rf "%"
 
