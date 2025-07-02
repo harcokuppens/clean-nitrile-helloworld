@@ -59,6 +59,6 @@ else
     fi
 fi
 echo "install Package: $package, Version: $version"
-yq -i ".dependencies.$package=\"^$version\"" "$NITRILE_YML_FILE" 2&>/dev/null 
+yq -i ".dependencies.$package=\"^$version\"" "$NITRILE_YML_FILE"  &>/dev/null 
 cd "$PROJECT_DIR"
 nitrile fetch
