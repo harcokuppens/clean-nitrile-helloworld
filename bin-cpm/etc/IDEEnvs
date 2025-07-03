@@ -1,0 +1,14 @@
+Version: 1.0
+Environments
+	Environment
+		EnvironmentName:	StdEnv
+		EnvironmentPaths
+			Path:	{Application}/lib/StdEnv
+		EnvironmentCompiler:	lib/exe/cocl
+		EnvironmentCodeGen:	lib/exe/cg
+		EnvironmentLinker:	lib/exe/linker
+		EnvironmentVersion:	920
+		EnvironmentRedirect:	False
+		EnvironmentCompileMethod:	Pers
+		EnvironmentProcessor:	I386
+		Environment64BitProcessor:	True
