@@ -229,6 +229,8 @@ However you offcourse can use this project on your local machine by installing
 nitrile and Clean yourself.
 
 - nitrile only supports x64 Linux and x64 Windows
+- only vscode language server support on Linux, not supported on Windows.\
+  Reason: the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/) is only available for Linux.
 - to install nitrile see https://clean-lang.org/about.html#install .
 - to use nitrile to install Clean and its libraries, and build Clean projects see
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
@@ -280,11 +282,15 @@ Please note that the devcontainer is build specifically for the `x64` architectu
 Nevertheless, it works seamlessly on Mac and Windows machines with the `ARM64`
 architecture thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
 
-#### use the Eastwood language server for vscode locally on x64 based Windows or Linux
+#### use the Eastwood language server for vscode locally on x64 based  Linux
 
 You have to first [install nitrile](https://clean-lang.org/about.html#install), then
-install eastwood with nitrile with the command 'nitrile global install eastwood',
-then finally you can install the
+install eastwood with nitrile with the command 'nitrile global install eastwood'.
+
+Note that the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/) is only available for Linux,
+and not for Windows, so unfortunately Windows is not supported.
+
+Then finally you can install the
 ["Clean" extension in vscode](https://marketplace.visualstudio.com/items?itemName=TOPSoftware.clean-vs-code).
 If you then open this project folder with vscode you can edit Clean with the support
 of the Eastwood Language Server in vscode.
