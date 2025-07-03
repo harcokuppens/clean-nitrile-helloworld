@@ -35,7 +35,7 @@ third party libraries.
       * [Develop on local machine](#develop-on-local-machine)
    * [Installation details](#installation-details)
       * [The Eastwood language server for vscode](#the-eastwood-language-server-for-vscode)
-         * [use the Eastwood language server for vscode locally on x64 based Windows or Linux](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-windows-or-linux)
+         * [use the Eastwood language server for vscode locally on x64 based Linux](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-linux)
       * [Platforms nitrile supports](#platforms-nitrile-supports)
    * [License](#license)
 <!--te-->
@@ -247,7 +247,7 @@ nitrile and Clean yourself.
 
 ### The Eastwood language server for vscode
 
-Only on x64 based Windows or Linux you can use vscode with the Eastwood language
+Only on x64 based Linux you can use vscode with the Eastwood language
 server locally. Therefore this project provides a ready-to-use environment for
 developing Clean applications using Docker development container via a devcontainer,
 so that you can develop clean on all platforms.
@@ -282,7 +282,7 @@ Please note that the devcontainer is build specifically for the `x64` architectu
 Nevertheless, it works seamlessly on Mac and Windows machines with the `ARM64`
 architecture thanks to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
 
-#### use the Eastwood language server for vscode locally on x64 based  Linux
+#### use the Eastwood language server for vscode locally on x64 based Linux
 
 You have to first [install nitrile](https://clean-lang.org/about.html#install), then
 install eastwood with nitrile with the command 'nitrile global install eastwood'.
