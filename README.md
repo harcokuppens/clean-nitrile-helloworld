@@ -241,7 +241,7 @@ nitrile and Clean yourself.
   https://gitforwindows.org installation which comes with a 'Git Bash' application to
   open a bash shell.
 - you can
-  [use vscode with Clean language support locally](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-windows-or-linux)
+  [use vscode with Clean language support locally (Linux ONLY)](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-linux)
 
 ## Installation details
 
