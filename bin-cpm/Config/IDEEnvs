@@ -1,9 +1,7 @@
 Version: 1.0
 Environments
 	Environment
-		EnvironmentName:	StdEnv
-		EnvironmentPaths
-			Path:	{Application}\Libraries\StdEnv
+		EnvironmentName:	nitrile
 		EnvironmentCompiler:	..\nitrile-packages\windows-x64\.home\exe\cocl.exe
 		EnvironmentCodeGen:	..\nitrile-packages\windows-x64\.home\exe\cg.exe
 		EnvironmentABCOptimise:	
