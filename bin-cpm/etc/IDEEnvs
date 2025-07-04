@@ -4,9 +4,9 @@ Environments
 		EnvironmentName:	StdEnv
 		EnvironmentPaths
 			Path:	{Application}/lib/StdEnv
-		EnvironmentCompiler:	lib/exe/cocl
-		EnvironmentCodeGen:	lib/exe/cg
-		EnvironmentLinker:	lib/exe/linker
+		EnvironmentCompiler:	../nitrile-packages/linux-x64/.home/exe/cocl
+		EnvironmentCodeGen:	../nitrile-packages/linux-x64/.home/exe/cg
+		EnvironmentLinker:	/usr/bin/gcc
 		EnvironmentVersion:	920
 		EnvironmentRedirect:	False
 		EnvironmentCompileMethod:	Pers

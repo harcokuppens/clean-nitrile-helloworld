@@ -1,0 +1,90 @@
+Version: 1.5
+Global
+	ProjectRoot:	.
+	Target:	StdEnv
+	Exec:	{Project}*bin*HelloWorld
+	ByteCode:	
+	CodeGen
+		CheckStacks:	False
+		CheckIndexes:	True
+		OptimiseABC:	False
+		GenerateByteCode:	False
+	Application
+		HeapSize:	409600
+		StackSize:	102400
+		ExtraMemory:	81920
+		IntialHeapSize:	204800
+		HeapSizeMultiplier:	4096
+		ShowExecutionTime:	False
+		ShowGC:	False
+		ShowStackSize:	False
+		MarkingCollector:	False
+		DisableRTSFlags:	False
+		RunFromConsole:	False
+		StandardRuntimeEnv:	True
+		Profile
+			Memory:	False
+			MemoryMinimumHeapSize:	0
+			Time:	False
+			Callgraph:	False
+			Stack:	False
+			Dynamics:	False
+			GenericFusion:	False
+			DescExL:	False
+		Output
+			Output:	ShowConstructors
+			Font:	Courier
+			FontSize:	9
+			WriteStdErr:	False
+	Link
+		LinkMethod:	Static
+		GenerateRelocations:	False
+		GenerateSymbolTable:	False
+		GenerateLinkMap:	False
+		LinkResources:	False
+		ResourceSource:	
+		GenerateDLL:	False
+		ExportedNames:	
+		StripByteCode:	True
+		KeepByteCodeSymbols:	True
+		PrelinkByteCode:	False
+	Paths
+		Path:	{Project}*src*WrapDebug
+		Path:	{Project}*src
+		Path:	{Project}*nitrile-packages*windows-x64*windows*lib
+		Path:	{Project}*nitrile-packages*windows-x64*text*lib
+		Path:	{Project}*nitrile-packages*windows-x64*tcpip*lib
+		Path:	{Project}*nitrile-packages*windows-x64*system*lib
+		Path:	{Project}*nitrile-packages*windows-x64*syscall*lib
+		Path:	{Project}*nitrile-packages*windows-x64*parser-combinators*lib
+		Path:	{Project}*nitrile-packages*windows-x64*lib-compiler*lib
+		Path:	{Project}*nitrile-packages*windows-x64*json*lib
+		Path:	{Project}*nitrile-packages*windows-x64*http*lib
+		Path:	{Project}*nitrile-packages*windows-x64*html*lib
+		Path:	{Project}*nitrile-packages*windows-x64*geometry*lib
+		Path:	{Project}*nitrile-packages*windows-x64*generic-print*lib
+		Path:	{Project}*nitrile-packages*windows-x64*generic-hash*lib
+		Path:	{Project}*nitrile-packages*windows-x64*containers*lib
+		Path:	{Project}*nitrile-packages*windows-x64*clean-platform*lib
+		Path:	{Project}*nitrile-packages*windows-x64*category-theory*lib
+		Path:	{Project}*nitrile-packages*windows-x64*base-stdenv*lib
+		Path:	{Project}*nitrile-packages*windows-x64*base-rts*lib
+		Path:	{Project}*nitrile-packages*windows-x64*base-lib*lib
+		Path:	{Project}*src
+		Path:	{Project}*nitrile-packages*windows-x64*argenv*lib
+	Precompile:	
+	Postlink:	
+MainModule
+	Name:	HelloWorld
+	Dir:	{Project}*src
+	Compiler
+		NeverMemoryProfile:	False
+		NeverTimeProfile:	False
+		StrictnessAnalysis:	True
+		ListTypes:	StrictExportTypes
+		ListAttributes:	True
+		Warnings:	True
+		Verbose:	True
+		ReadableABC:	False
+		ReuseUniqueNodes:	True
+		Fusion:	False

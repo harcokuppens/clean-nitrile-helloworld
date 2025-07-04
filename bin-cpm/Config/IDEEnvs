@@ -4,15 +4,15 @@ Environments
 		EnvironmentName:	StdEnv
 		EnvironmentPaths
 			Path:	{Application}\Libraries\StdEnv
-		EnvironmentCompiler:	Tools\Clean System\CleanCompiler.exe
-		EnvironmentCodeGen:	Tools\Clean System\CodeGenerator.exe
-		EnvironmentABCOptimise:	Tools\Clean System\ABCOptimiser.exe
-		EnvironmentByteCodeGen:	Tools\Clean System\ByteCodeGenerator.exe
-		EnvironmentByteCodeLink:	Tools\Clean System\ByteCodeLinker.exe
-		EnvironmentByteCodeStrip:	Tools\Clean System\ByteCodeStripper.exe
-		EnvironmentByteCodePrelink:	Tools\Clean System\ByteCodePrelinker.exe
-		EnvironmentLinker:	Tools\Clean System\StaticLinker.exe
-		EnvironmentDynLink:	Tools\Dynamics\DynamicLinker.exe
+		EnvironmentCompiler:	..\nitrile-packages\windows-x64\.home\exe\cocl.exe
+		EnvironmentCodeGen:	..\nitrile-packages\windows-x64\.home\exe\cg.exe
+		EnvironmentABCOptimise:	
+		EnvironmentByteCodeGen:	
+		EnvironmentByteCodeLink:	
+		EnvironmentByteCodeStrip:	
+		EnvironmentByteCodePrelink:	
+		EnvironmentLinker:	..\nitrile-packages\windows-x64\.home\exe\linker.exe
+		EnvironmentDynLink:	
 		EnvironmentVersion:	920
 		EnvironmentRedirect:	False
 		EnvironmentCompileMethod:	Pers
