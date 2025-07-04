@@ -3,7 +3,7 @@ Environments
 	Environment
 		EnvironmentName:	StdEnv
 		EnvironmentPaths
-			Path:	{Application}/lib/StdEnv
+			Path:	../nitrile-packages/linux-x64/base-stdenv/lib
 		EnvironmentCompiler:	../nitrile-packages/linux-x64/.home/exe/cocl
 		EnvironmentCodeGen:	../nitrile-packages/linux-x64/.home/exe/cg
 		EnvironmentLinker:	/usr/bin/gcc

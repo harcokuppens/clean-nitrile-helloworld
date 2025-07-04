@@ -7,11 +7,18 @@ fi
 echo "Using Clean in $CLEAN_HOME"
 
 TEMPLATE_PROJECT="$script_dir/resources/template.prt" 
+TEMPLATE_PROJECT_PRE="$script_dir/resources/template-pre.prt" 
+TEMPLATE_PROJECT_POST="$script_dir/resources/template-post.prt" 
 
 # --- Global Variables ---
 ENVIRONMENT="StdEnv"              # Default environment
 declare -a SOURCE_FOLDERS=("src") # Default source folder
 declare -a LIB_FOLDERS=()         # Initialize as empty, will be populated by -l
+
+# initialize
+cd "$script_dir/.."
+LIB_FOLDERS=(nitrile-packages/*/*/lib)
+
 
 PROJECT_NAME=""    # To store the project name argument
 MAIN_MODULE=""     # To store the main module name, defaults to PROJECTNAME if not specified
@@ -151,46 +158,67 @@ echo "Project Name:      $PROJECT_NAME"
 echo "Environment:       $ENVIRONMENT"
 echo "Main Module:       $MAIN_MODULE (File: $MAIN_MODULE_FILE)"
 echo "Output executable: $EXECUTABLE_NAME (File: bin/$EXECUTABLE_NAME)"
-echo "Source Folders:    ${SOURCE_FOLDERS[@]}" # Use array expansion
-echo "Library Folders:   ${LIB_FOLDERS[@]}"    # Use array expansion
+#echo "Source Folders:    ${SOURCE_FOLDERS[@]}" # Use array expansion
+echo "Source Folders:   "    # Use loop expansion
+for SOURCE_FOLDER in "${SOURCE_FOLDERS[@]}"; do echo "   $SOURCE_FOLDER";done
+#echo "Library Folders:   ${LIB_FOLDERS[@]}"    # Use array expansion
+echo "Library Folders:   "    # Use loop expansion
+for LIB_FOLDER in "${LIB_FOLDERS[@]}"; do echo "    $LIB_FOLDER";done
 echo ""
 
-# Example of how you might iterate through the collected folders
-# for src_dir in "${SOURCE_FOLDERS[@]}"; do
-#     echo "Processing source directory: $src_dir"
-# done
 
-# for lib_dir in "${LIB_FOLDERS[@]}"; do
-#     echo "Processing library directory: $lib_dir"
-# done
+# create project from template and set EXECUTABLE_NAME in it
 
-# create project from template and set PROJECT_NAME in it
-sed -e "s/{ProjectName}/${PROJECT_NAME}/g" -e "s/{MainModuleName}/${MAIN_MODULE}/g" "$TEMPLATE_PROJECT" >"${PROJECT_NAME}.prj"
+sed -e "s/{TEMPLATE_EXECUTABLE_NAME}/${EXECUTABLE_NAME}/g" -e "s/{MainModuleName}/${MAIN_MODULE}/g" "$TEMPLATE_PROJECT_PRE" >"${PROJECT_NAME}.prj"
 
 
-# then we set environment with cpm
-cpm project "${PROJECT_NAME}.prj" target "${ENVIRONMENT}"
+# then we add source and library paths
+
+for SOURCE_FOLDER in "${SOURCE_FOLDERS[@]}"; do
+    # First, remove any trailing slash
+    SOURCE_FOLDER="${SOURCE_FOLDER%/}"
+    # Then, replace all slashes with asterisks
+    SOURCE_FOLDER="${SOURCE_FOLDER//\//*}"
+    
+    printf "\t\tPath:\t{Project}*${SOURCE_FOLDER}\n" >> "${PROJECT_NAME}.prj"
+done
+
+for LIB_FOLDER in "${LIB_FOLDERS[@]}"; do
+    # First, remove any trailing slash
+    LIB_FOLDER="${LIB_FOLDER%/}"
+    # Then, replace all slashes with asterisks
+    LIB_FOLDER="${LIB_FOLDER//\//*}"
+
+    printf "\t\tPath:\t{Project}*${LIB_FOLDER}\n" >> "${PROJECT_NAME}.prj"
+done
+
+# finally add main module to project file
+sed  -e "s/{TEMPLATE_MAIN_MODULE}/${MAIN_MODULE}/g" "$TEMPLATE_PROJECT_POST" >>"${PROJECT_NAME}.prj"
+
+
 
 # for LIB_FOLDER in "${LIB_FOLDERS[@]}"; do
 #     # First, remove any trailing slash
 #     LIB_FOLDER="${LIB_FOLDER%/}"
 #     # Then, replace all slashes with asterisks
 #     LIB_FOLDER="${LIB_FOLDER//\//*}"
-#     cpm project "${PROJECT_NAME}.prj" path add "{Application}*lib*${LIB_FOLDER}"
-#     cpm project "${PROJECT_NAME}.prj" path add "{Application}*Libraries*${LIB_FOLDER}"
+#     ##cpm project "${PROJECT_NAME}.prj" path add "{Application}*lib*${LIB_FOLDER}"
+#     cpm project "${PROJECT_NAME}.prj" path add "{Project}*${LIB_FOLDER}"
+#     #cpm project "${PROJECT_NAME}.prj" path add "{Application}*Libraries*${LIB_FOLDER}"
 # done
 
-echo 
-for LIB_FOLDER in nitrile-packages/*/*/lib; do
-    # First, remove any trailing slash
-    LIB_FOLDER="${LIB_FOLDER%/}"
-    # Then, replace all slashes with asterisks
-    LIB_FOLDER="${LIB_FOLDER//\//*}"
-    cpm project "${PROJECT_NAME}.prj" path add "{Project}*${LIB_FOLDER}"
-    ##cpm project "${PROJECT_NAME}.prj" path add "{Application}*Libraries*${LIB_FOLDER}"
-done
+exit 0
 
-for d in nitrile-packages/*/*/lib; do echo $d;done
+# for LIB_FOLDER in nitrile-packages/*/*/lib; do
+#     # First, remove any trailing slash
+#     LIB_FOLDER="${LIB_FOLDER%/}"
+#     # Then, replace all slashes with asterisks
+#     LIB_FOLDER="${LIB_FOLDER//\//*}"
+#     cpm project "${PROJECT_NAME}.prj" path add "{Project}*${LIB_FOLDER}"
+#     ##cpm project "${PROJECT_NAME}.prj" path add "{Application}*Libraries*${LIB_FOLDER}"
+# done
+
+#for d in nitrile-packages/*/*/lib; do echo $d;done
 
 
 for SOURCE_FOLDER in "${SOURCE_FOLDERS[@]}"; do
