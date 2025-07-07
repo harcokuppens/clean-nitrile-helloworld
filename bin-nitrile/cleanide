@@ -1,0 +1,164 @@
+#!/bin/bash
+
+# exit at first unexpected error
+set -e
+
+# todo
+# - first do what I have, macos arm, linux x64, windows x64
+
+usage() {
+    local USAGE_MESSAGE="
+NAME
+   
+    cleanide  -  run the windows CleanIDE native(Windows) or using wine(Linux/Macos). 
+
+SYNOPSIS
+
+    cleanide  PROJECT_FILE.prj [-h|--help|help] 
+
+DESCRIPTION 
+
+    The CleanIDE is a graphical IDE to develop Clean projects. It is only available on Windows,
+    however you can run it on Linux and MacOS using wine.
+
+    With the option '-h' or '--help' it displays this usage message.
+
+    To run the CleanIDE you first need to install the Windows version of the CleanIDE 
+    in your project with the following command:
+
+        nitrile-install-cleanide 
+
+    Then create a project file for your project with the command:
+
+        nitrile-create-prj-file -p windows -a x64 PROJECT_NAME 
+
+    where PROJECT_NAME is the name of the main module of your project.
+
+    Finally you can run the CleanIDE with the command:
+
+        cleanide PROJECT_FILE.prj  
+
+
+
+WINE INSTALLATION INSTRUCTIONS
+
+    To run the CleanIDE on Linux or MacOS you also need to have wine installed.
+    The Windows version of nitrile is difficult to install on wine, however you 
+    only need to have the Windows version of the nitrile libraries for your project.
+    You can easily install them with the local platform's nitrile command:
+
+        nitrile update
+        nitrile fetch --platform windows --arch x64
+
+    Then create a project file for your project with the command:
+
+        nitrile-create-prj-file -p windows -a x64 PROJECT_NAME 
+
+    where PROJECT_NAME is the name of the main module of your project.
+
+    Finally you can run the CleanIDE with the command:
+
+        wine bin-nitrile/prj/windows-x64/cleanide.exe PROJECT_FILE.prj
+
+           or this script
+
+        cleanide PROJECT_FILE.prj   
+    
+
+SPECIFIC INSTRUCTIONS FOR MACOS
+
+    Because MacOS does not support nitrile at the moment, you can not run the
+    above nitrile commands directly on MacOS. However, you can run the above commands 
+    by opening the project in a vscode devcontainer which comes with the linux version of nitrile.
+
+    You can do this also directly  without launching the devcontainer in vscode with 
+    the docker command:
+
+        docker run -w /workspace --mount type=bind,src=\"\$(pwd)\",target=/workspace \\
+          cleanlang/nitrile  bash -c \"nitrile update && nitrile  fetch --platform=windows\"
+                
+"
+    echo "$USAGE_MESSAGE"
+    exit 0
+}
+
+# --- Parse Command Line Options and Arguments ---
+
+# Check for --help specifically before using getopts
+for arg in "$@"; do
+    case "$arg" in
+    --help)
+        usage
+        ;;
+    -h)
+        usage
+        ;;
+    esac
+done
+
+# --- main ---
+
+script_dir=$(dirname $0)
+script_dir="$(realpath $script_dir)"
+script_dir=${script_dir:?} # aborts with error if script_dir not set
+
+PROJECT_DIR="$(realpath $script_dir/..)"
+
+# check windows nitrile libraries are fetched in the project
+if [[ ! -d "$PROJECT_DIR/nitrile-packages/windows-x64" ]]; then
+    echo "ERROR: The Windows nitrile libraries needed for wine are not fetched in the project." 1>&2
+    echo "       See 'wine-cpm --help' for installation instructions." 1>&2
+    exit 1
+fi
+
+# check windows cpm tool is installed in the project
+if [[ ! -f "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" ]]; then
+    echo "ERROR: The Windows CleanIDE tool is not installed in the project. Please run:" 1>&2
+    echo "       See 'wine-cpm --help' for installation instructions." 1>&2
+    exit 1
+fi
+
+PLATFORM=$(uname -s)
+PLATFORM=$(echo "$PLATFORM" | tr '[:lower:]' '[:upper:]')
+case "$PLATFORM" in
+"WINDOWS"* | "MINGW"* | "CYGWIN"* | "MSYS"*) # Git Bash, Cygwin, MSYS op Windows
+    if [ "$#" -gt 0 ]; then
+        file_path="$1"
+        windows_path="$(
+            cygpath -w "$file_path" 2>/dev/null
+        )"
+        "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" "$windows_path" 2>/dev/null
+    else
+        "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" 2>/dev/null
+    fi
+    "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe"
+    ;;
+*)
+
+    # check wine installed
+    check-required-cmds wine || exit $?
+    # run the wine CleanIDE
+    if [ "$#" -eq 1 ]; then
+        file_path="$1"
+
+        # check if the file is a valid project file
+        # a valid project file is a file with the .prj extension
+        extension=${file_path##*\.}
+        if [[ "$extension" != "prj" ]]; then
+            echo "ERROR: The file '$file_path' is not a valid project file. It should have the '.prj' extension." 1>&2
+            echo "       See 'wine-cpm --help' for installation instructions." 1>&2
+            exit 1
+        fi
+
+        windows_path="$(
+            winepath -w "$file_path" 2>/dev/null
+        )"
+        wine "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" "$windows_path" 2>/dev/null
+    else
+        wine "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" 2>/dev/null
+    fi
+
+    ;;
+esac
+
+# --- End of main ---

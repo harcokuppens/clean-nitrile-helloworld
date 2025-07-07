@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# exit at first unexpected error
+set -e
+
+# todo
+# - first do what I have, macos arm, linux x64, windows x64
+
+usage() {
+    local USAGE_MESSAGE="
+NAME
+   
+    nitrile-install-cleanide  -  Install the CleanIDE. 
+
+SYNOPSIS
+
+    nitrile-install-cleanide [-h|--help|help] 
+
+
+DESCRIPTION 
+
+    Using this command you can automaticaly install the CleanIDE GUI
+    in your project directory. The CleanIDE is a graphical IDE to develop Clean projects
+    using a project file. The CleanIDE is installed with a special environment 'nitrile'
+    which sets the Clean compiler, linker, and code generator to the nitrile's installed
+    Clean compiler/linker and code generator. 
+    
+    After installing before openin the project you first need to run the following command
+
+        source env.bash
+
+    to get the cleanide and other nitrile commands in your PATH.    
+    
+    To run the CleanIDE use the cleanide command:
+
+        cleanide PROJECT_FILE.prj
+
+    The CleanIDE GUI is only available on Windows, however you can run it on Linux and 
+    MacOS using wine. For details see the 'cleanide -h' command.
+
+    With the option '-h' or '--help' it displays this usage message.
+"
+    echo "$USAGE_MESSAGE"
+    exit 0
+}
+
+install_cleanide() {
+
+    # we do x64 install for both windows x64 as ARM, we hope x64 Clean works on ARM windows
+    # download and unzip clean
+    mkdir -p "$PROJECT_DIR/bin-nitrile/prj/windows-x64/"
+    TMP_DIR="/tmp/clean$RANDOM"
+    mkdir -p "$TMP_DIR"
+    ZIP_FILE="$TMP_DIR/clean.zip"
+    CLEAN_URL=""https://ftp.cs.ru.nl/Clean/Clean31/windows/Clean_3.1_64.zip""
+    curl -L -o "$ZIP_FILE" "$CLEAN_URL"
+    # zip already contains "Clean 3.1/" folder so just unzip in project folder
+    unzip -d "$TMP_DIR" "$ZIP_FILE" "Clean 3.1/CleanIDE.exe"
+    mv "$TMP_DIR/Clean 3.1/CleanIDE.exe" "$PROJECT_DIR/bin-nitrile/prj/windows-x64/"
+    rm -r "$TMP_DIR"
+    # done Clean already build
+}
+
+# --- Parse Command Line Options and Arguments ---
+
+# Check for --help specifically before using getopts
+for arg in "$@"; do
+    case "$arg" in
+    --help)
+        usage
+        ;;
+    -h)
+        usage
+        ;;
+    esac
+done
+
+# --- main ---
+
+script_dir=$(dirname $0)
+script_dir="$(realpath $script_dir)"
+script_dir=${script_dir:?} # aborts with error if script_dir not set
+cd "$script_dir" || exit
+
+PROJECT_DIR="$(realpath $script_dir/..)"
+
+install_cleanide
+
+# install the CleanIDE environment for nitrile with relative paths to nitrile's installed Clean compiler/linker and code generator
+mkdir -p "$PROJECT_DIR/bin-nitrile/prj/windows-x64/Config"
+cp -r "$PROJECT_DIR/bin-nitrile/resources/Config/IDEEnvs" "$PROJECT_DIR/bin-nitrile/prj/windows-x64/Config/"
+
+# --- End of main ---

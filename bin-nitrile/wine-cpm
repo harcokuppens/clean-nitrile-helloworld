@@ -1,0 +1,150 @@
+#!/bin/bash
+
+# exit at first unexpected error
+set -e
+
+# todo
+# - first do what I have, macos arm, linux x64, windows x64
+
+usage() {
+    local USAGE_MESSAGE="
+NAME
+   
+    wine-cpm  -  run the windows cpm tool using wine. 
+
+SYNOPSIS
+
+    wine-cpm  PROJECT_FILE.prj [-h|--help|help] 
+
+
+DESCRIPTION 
+
+    Only on Linux and Windows is nitrile supported. However, on MacOS you can use
+    wine to build and run nitrile projects using the Windows version of cpm.
+
+    The Clean project manager(cpm) is a command line tool to build Clean projects using 
+    a project file. The project file for a nitrile project can be build with 
+    the 'nitrile-create-prj-file' command. You can also open the 
+    project file in the CleanIDE to develop and build the project. 
+    The CleanIDE can be installed with the 'nitrile-install-cleanide' command,
+    and conveniently run with the 'cleanide' command.
+
+    With the option '-h' or '--help' it displays this usage message.
+
+
+INSTALLATION INSTRUCTIONS MACOS      
+
+    The instructions below are specific for MacOS, because on Linux and Windows
+    the nitrile commands are available and you can run the cpm tool directly
+    without needing wine.
+
+    To run the Windows version of cpm on MacOS you need to have wine installed,
+    you can install it with homebrew:
+
+        brew install wine-stable  
+
+    Then install the Windows versions Clean project manager (cpm) tool in your 
+    project with the following command:
+
+        nitrile-install-cpm --platform windows --arch x86_64
+    
+    Finally we have to fetch the Windows nitrile libraries in the project.
+    The windows version of nitrile is difficult to install on wine, however we can 
+    open the project in the vscode devcontainer, which comes with the linux version of nitrile.
+    With the linux nitrile command you can then fetch the Windows nitrile libraries
+    in the bind mounted project directory with the following commands:
+    
+         nitrile update 
+         nitrile fetch --platform windows --arch x64
+        
+    You can do this also directly  without launching the devcontainer in vscode with 
+    the docker command:
+
+        docker run -w /workspace --mount type=bind,src=\"\$(pwd)\",target=/workspace \\
+          cleanlang/nitrile  bash -c \"nitrile update && nitrile  fetch --platform=windows\"
+
+    Then create a project file for your project with the command:
+
+        nitrile-create-prj-file -p windows -a x64 PROJECT_NAME 
+
+    where PROJECT_NAME is the name of the main module of your project.
+
+    Then you can build the project using wine with the command
+
+        wine bin-nitrile/prj/windows-x64/cpm.exe  PROJECT_FILE.prj 
+            
+             or this script
+
+        wine-cpm  PROJECT_FILE.prj
+
+"
+    echo "$USAGE_MESSAGE"
+    exit 0
+}
+
+# --- Parse Command Line Options and Arguments ---
+
+# Check for --help specifically before using getopts
+for arg in "$@"; do
+    case "$arg" in
+    --help)
+        usage
+        ;;
+    -h)
+        usage
+        ;;
+    esac
+done
+
+# --- main ---
+
+script_dir=$(dirname $0)
+script_dir="$(realpath $script_dir)"
+script_dir=${script_dir:?} # aborts with error if script_dir not set
+
+PROJECT_DIR="$(realpath $script_dir/..)"
+
+# check wine installed
+check-required-cmds wine || exit $?
+
+# check windows nitrile libraries are fetched in the project
+if [[ ! -d "$PROJECT_DIR/nitrile-packages/windows-x64" ]]; then
+    echo "ERROR: The Windows nitrile libraries needed for wine are not fetched in the project." 1>&2
+    echo "       See 'wine-cpm --help' for installation instructions." 1>&2
+    exit 1
+fi
+
+# check windows cpm tool is installed in the project
+if [[ ! -f "$PROJECT_DIR/bin-nitrile/prj/windows-x64/cpm.exe" ]]; then
+    echo "ERROR: The Windows cpm tool is not installed in the project. Please run:" 1>&2
+    echo "       See 'wine-cpm --help' for installation instructions." 1>&2
+    exit 1
+fi
+
+# run the wine cpm tool
+
+if [ "$#" -eq 1 ]; then
+
+    # check if the file is a valid project file
+    # a valid project file is a file with the .prj extension
+    file_path="$1"
+    extension=${file_path##*\.}
+    if [[ "$extension" != "prj" ]]; then
+        echo "ERROR: The file '$file_path' is not a valid project file. It should have the '.prj' extension." 1>&2
+        echo "       See 'wine-cpm --help' for installation instructions." 1>&2
+        exit 1
+    fi
+
+    # note: cpm.exe does not support absolute paths and relative paths , so we have to
+    # change the current directory to the directory of the file and pass only the file name
+    # to cpm.exe.
+    cd "$(dirname "$file_path")"
+    file_path="$(basename "$file_path")"
+
+    wine "$PROJECT_DIR/bin-nitrile/prj/windows-x64/cpm.exe" "$file_path"
+
+else
+    usage
+fi
+
+# --- End of main ---

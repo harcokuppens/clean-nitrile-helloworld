@@ -1,0 +1,199 @@
+#!/bin/bash
+
+# exit at first unexpected error
+set -e
+
+# todo
+# - first do what I have, macos arm, linux x64, windows x64
+
+usage() {
+    local USAGE_MESSAGE="
+NAME
+   
+    nitrile-install-cpm  -  Install the Clean project manager (cpm) tool. 
+
+SYNOPSIS
+
+    nitrile-install-cpm [-h|--help|help] [--platform=linux|windows] [--arch=x86_64]
+
+
+DESCRIPTION 
+
+    Using this command you can automaticaly install the Clean project manager (cpm) 
+    tool in your project directory. The Clean project manager is a command line tool 
+    to build Clean projects using a project file.  The cpm command is installed with 
+    a special environment 'nitrile' which sets the Clean compiler, linker, and code 
+    generator to the nitrile's installed Clean compiler/linker and code generator. 
+    
+    The project file for a nitrile project can be build with the 'nitrile-create-prj-file' 
+    command. You can also open the  project file in the CleanIDE to develop and build 
+    the project. The CleanIDE can be installed with the 'nitrile-install-cleanide' command.
+
+    This script will detect the platform and architecture of your system and
+    download the appropriate Clean project manager (cpm) tool for your system. 
+    However, it only supports x64 Linux and x64 Windows for now. 
+
+    When you open the project you first need to run the following command
+
+        source env.bash
+
+    to get cpm and other nitrile commands in your PATH.    
+
+    On MacOS, it will not install anything because nitrile does not support macOS yet,
+    however you can install with the option '--platform windows' the windows version 
+    of cpm on macOS to build and run the project using Wine. See the wine-cpm command.
+
+    On Linux and MacOS you can also run the CleanIDE, which is only available on Windows,
+    using wine. See the cleanide command.  
+
+    With the option '-h' or '--help' it displays this usage message.
+"
+    echo "$USAGE_MESSAGE"
+    exit 0
+}
+
+# Functie om commando's uit te voeren voor Linux
+run_linux_commands() {
+    echo "--- Commands for Linux ($1) ---"
+    if [ "$1" == "x86_64" ]; then
+        echo "Linux x64."
+        #cat /etc/os-release
+        # download and unzip clean
+        TMP_FILE="/tmp/clean$RANDOM.tgz"
+        CLEAN_URL="https://ftp.cs.ru.nl/Clean/Clean31/linux/clean3.1_64.tar.gz"
+        curl -L -o "$TMP_FILE" "$CLEAN_URL"
+        # tgz already contains clean/ folder so just unzip in project folder
+        tar -C "$PROJECT_DIR" -xzvf "$TMP_FILE"
+        rm "$TMP_FILE"
+        # build Clean
+        if make -C "$CLEAN_HOME"; then
+            # patch environments in Clean installation
+            mkdir -p clean/etc/
+            cp resources/IDEEnvs clean/etc/
+            echo "Succesfully installed Clean"
+        else
+            echo "ERROR: Something went wrong when installing Clean" 1>&2
+            exit 1
+        fi
+    else
+        echo "ERROR: install not supported for this Linux architecture: $1" 1>&2
+        exit 1
+    fi
+}
+
+# Functie om commando's uit te voeren voor Windows (via Git Bash/WSL)
+run_windows_commands() {
+    echo "--- Commands for Windows ($1) ---"
+    if [ "$1" == "x86_64" ]; then
+        echo " Windows x64."
+    else
+        echo "ERROR: install not supported for this Windows architecture: $1" 1>&2
+        exit 1
+    fi
+    # we only do x64 install forWindows x64 ; nitrile does not support ARM
+    # download and unzip clean
+    mkdir -p "$PROJECT_DIR/bin-nitrile/prj/windows-x64/"
+    TMP_DIR="/tmp/clean$RANDOM"
+    mkdir -p "$TMP_DIR"
+    ZIP_FILE="$TMP_DIR/clean.zip"
+    CLEAN_URL=""https://ftp.cs.ru.nl/Clean/Clean31/windows/Clean_3.1_64.zip""
+    curl -L -o "$ZIP_FILE" "$CLEAN_URL"
+    # zip already contains "Clean 3.1/" folder so just unzip in project folder
+    unzip -d "$TMP_DIR" "$ZIP_FILE" "Clean 3.1/cpm.exe"
+    mv "$TMP_DIR/Clean 3.1/cpm.exe" "$PROJECT_DIR/bin-nitrile/prj/windows-x64/"
+    rm -r "$TMP_DIR"
+    # done Clean already build
+}
+
+# --- Parse Command Line Options and Arguments ---
+
+# Check for --help specifically before using getopts
+for arg in "$@"; do
+    case "$arg" in
+    --help)
+        usage
+        ;;
+    -h)
+        usage
+        ;;
+    esac
+done
+
+# --- main ---
+
+script_dir=$(dirname $0)
+script_dir="$(realpath $script_dir)"
+script_dir=${script_dir:?} # aborts with error if script_dir not set
+cd "$script_dir" || exit
+
+PROJECT_DIR="$(realpath $script_dir/..)"
+
+# Default values
+DEFAULT_PLATFORM=$(uname -s)
+DEFAULT_ARCH=$(uname -m)
+
+PLATFORM="$DEFAULT_PLATFORM"
+ARCH="$DEFAULT_ARCH"
+
+# Parse command-line options
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+    --platform)
+        if [[ -n "$2" && "$2" != --* ]]; then
+            PLATFORM="$2"
+            shift
+        else
+            echo "ERROR: --platform requires an argument."
+            exit 1
+        fi
+        ;;
+    --arch)
+        if [[ -n "$2" && "$2" != --* ]]; then
+            ARCH="$2"
+            shift
+        else
+            echo "ERROR: --arch requires an argument."
+            exit 1
+        fi
+        ;;
+    -*) # Handle unknown options
+        echo "Unknown option: $1"
+        exit 1
+        ;;
+    *) # Stop parsing options
+        break
+        ;;
+    esac
+    shift
+done
+
+echo "Platform: $PLATFORM"
+echo "Architecture: $ARCH"
+
+# TODO: add the IDEENVS in the subfolder relative to cpm (.exe)
+
+PLATFORM=$(echo "$PLATFORM" | tr '[:lower:]' '[:upper:]')
+case "$PLATFORM" in
+"DARWIN") # macOS
+    echo "install not supported for MacOS because nitrile does not support macOS yet."
+    exit 1
+    ;;
+"LINUX")
+    run_linux_commands "$ARCH"
+    # install the CleanIDE environment for nitrile with relative paths to nitrile installed Clean compiler/linker and code generator
+    mkdir -p "$PROJECT_DIR/bin-nitrile/prj/windows-x64/etc"
+    cp -r "$PROJECT_DIR/bin-nitrile/resources/etc/IDEEnvs" "$PROJECT_DIR/bin-nitrile/prj/linux-x64/etc/"
+    ;;
+"WINDOWS"* | "MINGW"* | "CYGWIN"* | "MSYS"*) # Git Bash, Cygwin, MSYS op Windows
+    run_windows_commands "$ARCH"
+    # install the CleanIDE environment for nitrile with relative paths to nitrile installed Clean compiler/linker and code generator
+    mkdir -p "$PROJECT_DIR/bin-nitrile/prj/windows-x64/Config"
+    cp -r "$PROJECT_DIR/bin-nitrile/resources/Config/IDEEnvs" "$PROJECT_DIR/bin-nitrile/prj/windows-x64/Config/"
+    ;;
+*)
+    echo "unknown: $PLATFORM with architecture: $ARCH"
+    exit 1
+    ;;
+esac
+
+# --- End of main ---

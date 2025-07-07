@@ -12,3 +12,5 @@ bin/*
 # Except the .gitignore file within the 'bin' directory
 !bin/.gitkeep
 Temp
+bin-nitrile/prj
+.DS_Store

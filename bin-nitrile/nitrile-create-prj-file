@@ -1,0 +1,265 @@
+#!/bin/bash
+
+script_dir=$(dirname $0)
+TEMPLATE_PROJECT_PRE="$script_dir/resources/template-pre.prt"
+TEMPLATE_PROJECT_POST="$script_dir/resources/template-post.prt"
+
+# check required commands are installed
+check-required-cmds yq jq || exit $?
+
+# --- Global Variables ---
+ENVIRONMENT="StdEnv"              # Default environment
+declare -a SOURCE_FOLDERS=("src") # Default source folder
+declare -a LIB_FOLDERS=()         # Initialize as empty, will be populated by -l
+
+TARGET=$(nitrile-target) # Get the target platform
+
+readonly PROJECT_DIR=$(realpath $script_dir/..) || exit 1
+readonly NITRILE_YML_FILE="$PROJECT_DIR/nitrile.yml"
+
+# initialize source folders
+cd "$PROJECT_DIR" || exit 1
+SOURCE_FOLDERS=($(yq --no-colors ".src[]" "$NITRILE_YML_FILE"))
+
+PROJECT_NAME=""    # To store the project name argument
+MAIN_MODULE=""     # To store the main module name, defaults to PROJECTNAME if not specified
+EXECUTABLE_NAME="" # To store the executable name, defaults to PROJECTNAME if not specified
+
+# This script is used to determine the target platform for the nitrile package manager.
+case "$(uname -s)" in
+Linux*) PLATFORM=linux ;;
+Darwin*) PLATFORM=mac ;;
+CYGWIN* | MINGW* | MSYS*) PLATFORM=windows ;;
+*) PLATFORM="unknown" ;;
+esac
+
+# Arch Detection
+ARCH=$(uname -m)
+case "$ARCH" in
+x86_64) ARCH="x64" ;;
+i386 | i686) ARCH="x86" ;;
+# registry only has arm
+# aarch64 | arm64) ARCH="arm64" ;;
+# armv7l | armv6l) ARCH="arm" ;;
+aarch64 | arm64 | armv7l | armv6l) ARCH="arm" ;;
+*) ARCH="unknown" ;;
+esac
+
+# --- Function: Display Usage Information ---
+usage() {
+    local USAGE_MESSAGE="Usage: nitrile-create-prj-file [-h] [-p PLATFORM] [-a ARCH] [-e ENVIRONMENT] [-s SOURCE] [-l LIB] [-m MODULE] [-o EXEC_NAME ] PROJECTNAME
+
+
+Description:
+  This script creates a project file for the current nitrile project.
+  It creates a project file PROJECTNAME.prj in the nitrile's project's root folder with default 
+  settings based on the nitrile.yml config file. With the options, you can add 
+  additional source and library folders, specify the main module, and set the executable name.
+  The default environment is 'nitrile', which is a special environment for nitrile projects
+  which set the Clean compiler, linker, and code generator to the nitrile's installed Clean 
+  compiler/linker and code generator.
+
+
+  For more basic control over the project file creation, you can use the more
+  general 'create-prj-file' command.
+
+Arguments:
+  PROJECTNAME            The name of the project to be created. This argument is mandatory.
+
+Options:
+  -p PLATFOM             Specify the target platform for the project.
+                         Default: current platform ('$TARGET').
+                         You can find the current target platform along with its cpu architecture 
+                         using the 'nitrile-target' command.
+                         Currently nitrile only supports 'windows' and 'linux', but not 'macos'. 
+
+  -a ARCH                Specify the architecture for the project.
+                         Default: current architecture ('x64').
+                         You can find the current target platform along with its cpu architecture 
+                         using the 'nitrile-target' command.
+                         Currently nitrile only supports 'x64'.
+
+  -e ENVIRONMENT         Specify the environment for the project.
+                         Default: '$ENVIRONMENT'.
+                         (On Linux, this is typically found in clean/etc/ folder;
+                         on Windows, in the Config folder).
+
+  -s SOURCE              Add an extra source folder to the project file.
+                         By default, the 'src' folder is always included.
+                         This option can be specified multiple times to add several
+                         source folders.
+
+  -l LIB                 Add an extra library folder to the project file.
+                         These folders are added in addition to any libraries
+                         specified within the chosen environment.
+                         This option can be specified multiple times to add several
+                         library folders.
+
+  -m MODULE              Specify the name of the main module for the project.
+                         This module must be located directly in the 'src' directory
+                         (e.g., 'src/MyModule.icl').
+                         Default: PROJECTNAME.icl (e.g., if PROJECTNAME is 'MyProject',
+                         the default module would be 'MyProject.icl').
+
+  -o EXEC_NAME           Specify the name of the executable build by the project in the 
+                         project's bin directory.
+                         Default: PROJECTNAME 
+
+  -h, --help             Display this help message and exit.
+
+"
+    echo "$USAGE_MESSAGE"
+    exit 0
+}
+
+# --- Parse Command Line Options and Arguments ---
+
+# Check for --help specifically before using getopts
+for arg in "$@"; do
+    case "$arg" in
+    --help)
+        usage
+        ;;
+    -h)
+        usage
+        ;;
+    esac
+done
+
+# Parse short options using getopts.
+while getopts ":p:a:e:s:l:m:o:" opt; do
+    case "$opt" in
+    p)
+        PLATFORM="$OPTARG"
+        ;;
+
+    a)
+        ARCH="$OPTARG"
+        ;;
+
+    e)
+        ENVIRONMENT="$OPTARG"
+        ;;
+    s)
+        # # First, remove any trailing slash
+        # OPTARG="${OPTARG%/}"
+        # # Then, replace all slashes with asterisks
+        # OPTARG="${OPTARG//\//*}"
+        SOURCE_FOLDERS+=("$OPTARG") # Append additional source folder
+        ;;
+    l)
+        # # First, remove any trailing slash
+        # OPTARG="${OPTARG%/}"
+        # # Then, replace all slashes with asterisks
+        # OPTARG="${OPTARG//\//*}"
+        LIB_FOLDERS+=("$OPTARG") # Append additional library folder
+        ;;
+    m)
+        MAIN_MODULE="$OPTARG" # Set the main module name
+        ;;
+    o)
+        EXECUTABLE_NAME="$OPTARG" # Set the executable name
+        ;;
+    \?) # Handle invalid options
+        echo "Error: Invalid option -$OPTARG." >&2
+        usage
+        ;;
+    :) # Handle missing arguments for options
+        echo "Error: Option -$OPTARG requires an argument." >&2
+        usage
+        ;;
+    esac
+done
+
+if ! [[ "$PLATFORM" == "windows" || "$PLATFORM" == "linux" ]]; then
+    echo "Error: The platform '$PLATFORM' is not supported. Currently, only 'windows' and 'linux' are supported." >&2
+    exit 1
+fi
+
+if ! [[ "$ARCH" == "x64" ]]; then
+    echo "Error: The architecture '$ARCH' is not supported. Currently, only 'x64' is supported." >&2
+    exit 1
+fi
+
+TARGET="$PLATFORM-$ARCH" # Construct the target string
+TARGET_LIB_FOLDERS=(nitrile-packages/$TARGET/*/lib)
+LIB_FOLDERS=("${LIB_FOLDERS[@]}" "${TARGET_LIB_FOLDERS[@]}")
+
+# Shift off the options so that remaining arguments can be processed
+shift $((OPTIND - 1))
+
+# Check if PROJECTNAME is provided as a positional argument
+if [ -z "$1" ]; then
+    echo "Error: PROJECTNAME is a mandatory argument." >&2
+    usage
+else
+    PROJECT_NAME="$1"
+fi
+
+# Set MAIN_MODULE to PROJECT_NAME if it was not explicitly specified
+if [ -z "$MAIN_MODULE" ]; then
+    MAIN_MODULE="$PROJECT_NAME"
+fi
+
+# Set EXECUTABLE_NAME to PROJECT_NAME if it was not explicitly specified
+if [ -z "$EXECUTABLE_NAME" ]; then
+    EXECUTABLE_NAME="$PROJECT_NAME"
+fi
+
+# Construct the full path to the main module file
+MAIN_MODULE_FILE="src/$MAIN_MODULE.icl"
+
+# Check if the main module file exists
+if [ ! -f "$MAIN_MODULE_FILE" ]; then
+    echo "Error: The specified main module file '$MAIN_MODULE_FILE' does not exist." >&2
+    exit 1 # Exit with an error code
+fi
+
+# check windows nitrile libraries are fetched in the project
+if [[ ! -d "$PROJECT_DIR/nitrile-packages/$TARGET" ]]; then
+    echo "ERROR: The nitrile libraries need to be fetched with nitrile before creating the project file. " 1>&2
+    echo "       Run 'nitrile fetch' before creating the project file." 1>&2
+    exit 1
+fi
+
+# --- Main Script Logic (Example) ---
+echo "--- Project File Creation Summary ---"
+echo "Project Name:      $PROJECT_NAME"
+echo "Target:            $TARGET"
+echo "Environment:       $ENVIRONMENT"
+echo "Main Module:       $MAIN_MODULE (File: $MAIN_MODULE_FILE)"
+echo "Output executable: $EXECUTABLE_NAME (File: bin/$EXECUTABLE_NAME)"
+echo "Source Folders:   " # Use loop expansion
+for SOURCE_FOLDER in "${SOURCE_FOLDERS[@]}"; do echo "   $SOURCE_FOLDER"; done
+echo "Library Folders:   " # Use loop expansion
+for LIB_FOLDER in "${LIB_FOLDERS[@]}"; do echo "    $LIB_FOLDER"; done
+echo ""
+
+# create  project from templates pre and post
+# -------------------------------------------
+
+# create start of project from template TEMPLATE_PROJECT_PRE and set EXECUTABLE_NAME in it
+sed -e "s/{TEMPLATE_EXECUTABLE_NAME}/${EXECUTABLE_NAME}/g" -e "s/{MainModuleName}/${MAIN_MODULE}/g" "$TEMPLATE_PROJECT_PRE" >"${PROJECT_NAME}.prj"
+
+# then we add source and library paths
+
+for SOURCE_FOLDER in "${SOURCE_FOLDERS[@]}"; do
+    # First, remove any trailing slash
+    SOURCE_FOLDER="${SOURCE_FOLDER%/}"
+    # Then, replace all slashes with asterisks
+    SOURCE_FOLDER="${SOURCE_FOLDER//\//*}"
+
+    printf "\t\tPath:\t{Project}*${SOURCE_FOLDER}\n" >>"${PROJECT_NAME}.prj"
+done
+
+for LIB_FOLDER in "${LIB_FOLDERS[@]}"; do
+    # First, remove any trailing slash
+    LIB_FOLDER="${LIB_FOLDER%/}"
+    # Then, replace all slashes with asterisks
+    LIB_FOLDER="${LIB_FOLDER//\//*}"
+
+    printf "\t\tPath:\t{Project}*${LIB_FOLDER}\n" >>"${PROJECT_NAME}.prj"
+done
+
+# finally add main module to project file with template TEMPLATE_PROJECT_POST
+sed -e "s/{TEMPLATE_MAIN_MODULE}/${MAIN_MODULE}/g" "$TEMPLATE_PROJECT_POST" >>"${PROJECT_NAME}.prj"
