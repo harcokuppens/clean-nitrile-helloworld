@@ -7,7 +7,11 @@ but it can also serve as a template for building other projects using `nitrile`.
 There is also a similar repository where we build the same HelloWorld Clean code
 using the 'classic' Clean distribution from https://clean.cs.ru.nl/ at
 https://github.com/harcokuppens/clean-classic-helloworld.git which builds the Clean
-code using `clm` directly instead of with `nitrile build` .
+code using `cpm` directly instead of with `nitrile build` .
+
+In this example project we extended nitrile to also generate a Clean project file
+from the nitrile project. The Clean project file gives us then the ability for more
+advanced builds with `cpm` or editing with the CleanIDE.
 
 Compared to the 'classic' Clean distribution, the nitrile tool gives you a modern way
 to install the Clean compiler/runtime and its libraries as versioned packages from an
@@ -23,6 +27,7 @@ third party libraries.
    * [HelloWorld program](#helloworld-program)
    * [Build project with Nitrile](#build-project-with-nitrile)
    * [Added Nitrile commands](#added-nitrile-commands)
+   * [Nitrile project with project file to build project with cpm or develop with the CleanIDE](#nitrile-project-with-project-file-to-build-project-with-cpm-or-develop-with-the-cleanide)
    * [Try out more examples](#try-out-more-examples)
    * [Clean documentation](#clean-documentation)
    * [Essential Resources for Clean Language Development](#essential-resources-for-clean-language-development)
@@ -130,6 +135,77 @@ missing functionality to nitrile:
     nitrile-root      - determine the root directory of the nitrile project
     nitrile-target    - determine the target platform for the nitrile package manager
 
+For using project files with cpm or the CleanIDE we added the following commands:
+
+    nitrile-create-prj-file     - Create a project file for the current nitrile project
+    nitrile-install-cpm         - Install the Clean project manager (cpm) tool.
+    wine-cpm                    - Run the windows cpm tool using wine
+    nitrile-install-cleanide    - Install the CleanIDE.
+    cleanide                    - Run the windows CleanIDE native(Windows) or using wine(Linux/Macos)
+
+## Nitrile project with project file to build project with cpm or develop with the CleanIDE
+
+Nitrile is great for installing dependencies, however instead of building with
+nitrile one can better create a project file for your nitrile project for more
+advanced build and for developing your project in the CleanIDE which is more
+powerfull then vscode with the Clean extension.
+
+To start developing your project with a project file:
+
+1.  set environment in bash shell
+
+          source env.bash
+
+2.  optionally clean any old nitrile builds/installation
+
+          nitrile-cleanup --all
+
+3.  first fetch all nitrile libs for current platform
+
+          nitrile update
+
+    and then
+
+          # for windows or wine
+          nitrile fetch  --platform=windows
+             or
+          # for linux
+          nitrile fetch  --platform=linux
+
+    Note that on MacOS nitrile is not supported, but you can build and develop a
+    nitrile project with wine as a windows project. Installing nitrile on wine is
+    difficult, however we can open the project in the vscode devcontainer, which
+    comes with the linux version of nitrile. With the linux nitrile command you can
+    then fetch the Windows nitrile libraries in the bind mounted project directory
+    with the above first command. You can do this also directly without launching the
+    devcontainer in vscode with the docker command:
+
+            docker run -w /workspace --mount type=bind,src=\"\$(pwd)\",target=/workspace \
+              cleanlang/nitrile  bash -c \"nitrile update && nitrile  fetch --platform=windows
+
+4.  then create a project file for the nitrile project
+
+         # for windows or wine
+         nitrile-create-prj-file -p windows  HelloWorld
+             or
+         # for linux
+         nitrile-create-prj-file -p linux  HelloWorld
+
+5.  then build
+
+         # for windows or linux
+         cpm HelloWorld.prj
+             or
+         # building project with wine on MacOS
+         wine-cpm  HelloWorld.prj
+
+    or develop in the Clean IDE
+
+         cleanIDE HelloWorld.prj
+
+    which runs the cleanIDE native on Windows, and with wine on Linux or MacOS. When
+    using wine the windows versions of the nitrile libs must be fetched.
+
 ## Try out more examples
 
 In the examples subfolder are some examples from the classic Clean distribution which
@@ -230,7 +306,8 @@ nitrile and Clean yourself.
 
 - nitrile only supports x64 Linux and x64 Windows
 - only vscode language server support on Linux, not supported on Windows.\
-  Reason: the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/) is only available for Linux.
+  Reason: the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/)
+  is only available for Linux.
 - to install nitrile see https://clean-lang.org/about.html#install .
 - to use nitrile to install Clean and its libraries, and build Clean projects see
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
@@ -247,10 +324,10 @@ nitrile and Clean yourself.
 
 ### The Eastwood language server for vscode
 
-Only on x64 based Linux you can use vscode with the Eastwood language
-server locally. Therefore this project provides a ready-to-use environment for
-developing Clean applications using Docker development container via a devcontainer,
-so that you can develop clean on all platforms.
+Only on x64 based Linux you can use vscode with the Eastwood language server locally.
+Therefore this project provides a ready-to-use environment for developing Clean
+applications using Docker development container via a devcontainer, so that you can
+develop clean on all platforms.
 
 The development container (devcontainer) uses Nitrile to install the Eastwood
 language server. The Eastwood language server is compatible with all Clean projects,
@@ -287,8 +364,10 @@ architecture thanks to Docker Desktop’s support for `QEMU` emulation for `ARM6
 You have to first [install nitrile](https://clean-lang.org/about.html#install), then
 install eastwood with nitrile with the command 'nitrile global install eastwood'.
 
-Note that the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/) is only available for Linux,
-and not for Windows, so unfortunately Windows is not supported.
+Note that the
+[Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/) is
+only available for Linux, and not for Windows, so unfortunately Windows is not
+supported.
 
 Then finally you can install the
 ["Clean" extension in vscode](https://marketplace.visualstudio.com/items?itemName=TOPSoftware.clean-vs-code).
