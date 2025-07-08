@@ -16,6 +16,9 @@ if [[ "$1" == "-h" ]]; then
     exit 0
 fi
 
+# check required commands are installed
+check-required-cmds nitrile || exit $?
+
 printf "\nnitrile version\n---------------\n"
 nitrile help env | head -1
 printf "\nclean version\n-------------\n"

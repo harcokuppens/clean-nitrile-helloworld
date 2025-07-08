@@ -34,7 +34,7 @@ if [[ "$#" -lt "$MININAL_ARGS" ]]; then
 fi
 
 # check required commands are installed
-check-required-cmds yq jq || exit $?
+check-required-cmds nitrile yq jq || exit $?
 
 package="$1"
 
@@ -44,7 +44,7 @@ if ! jq -e '.[] |  select( .name == "'"$package"'") | if . == {} then false else
     exit 1
 fi
 echo "uninstall Package: $package"
-yq -i "del(.dependencies.$package)" "$NITRILE_YML_FILE" &>/dev/null 
+yq -i "del(.dependencies.$package)" "$NITRILE_YML_FILE" &>/dev/null
 cd "$PROJECT_DIR"
 # problem: fetch does not update the lock file when a package is removed and then also does not remove the package from the nitrile-packages/ directory
 # solution (HACK): remove a directory of a required package and then run fetch; on installing the required package by fetch the lock file is updated and synced with the nitrile-packages/ directory

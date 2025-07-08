@@ -31,7 +31,7 @@ if [[ "$#" -lt "$MININAL_ARGS" ]]; then
 fi
 
 # check required commands are installed
-check-required-cmds yq jq || exit $?
+check-required-cmds nitrile yq jq || exit $?
 
 input="$1"
 if [[ "$input" == *@* ]]; then
@@ -59,6 +59,6 @@ else
     fi
 fi
 echo "install Package: $package, Version: $version"
-yq -i ".dependencies.$package=\"^$version\"" "$NITRILE_YML_FILE"  &>/dev/null 
+yq -i ".dependencies.$package=\"^$version\"" "$NITRILE_YML_FILE" &>/dev/null
 cd "$PROJECT_DIR"
 nitrile fetch
