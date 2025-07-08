@@ -34,13 +34,15 @@ third party libraries.
       * [<a href="https://clean-and-itasks.gitlab.io/nitrile/" rel="nofollow">Nitrile documentation</a>](https://clean-and-itasks.gitlab.io/nitrile/)
       * [<a href="https://top-software.gitlab.io/clean-lang/" rel="nofollow">Guides and hints to work with the Clean</a>](https://top-software.gitlab.io/clean-lang/)
    * [Setup Development environment](#setup-development-environment)
+      * [Pre-setup DevContainer in VsCode](#pre-setup-devcontainer-in-vscode)
+      * [Local installation](#local-installation)
+         * [Quick](#quick)
+         * [More details](#more-details)
+         * [IDE support on local machine](#ide-support-on-local-machine)
    * [Cpm and CleanIDE](#cpm-and-cleanide)
       * [Cpm build on Linux/Windows with x64 architecture](#cpm-build-on-linuxwindows-with-x64-architecture)
       * [Cpm build using wine on MacOS/Linux for both x64 and ARM](#cpm-build-using-wine-on-macoslinux-for-both-x64-and-arm)
       * [CleanIDE](#cleanide)
-   * [Nitrile as package manager and build tool](#nitrile-as-package-manager-and-build-tool)
-      * [Nitrile in DevContainer](#nitrile-in-devcontainer)
-      * [Nitrile on local machine](#nitrile-on-local-machine)
    * [Installation details](#installation-details)
       * [The Eastwood language server for vscode](#the-eastwood-language-server-for-vscode)
          * [use the Eastwood language server for vscode locally on x64 based Linux](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-linux)
@@ -109,21 +111,69 @@ Hello you
 Execution: 0.00  Garbage collection: 0.00  Total: 0.00
 ```
 
-Instead of nitrile, you can use cpm as build tool. To build with cpm you first have
-to create a Clean project file for your nitrile project:
+Instead of nitrile, you can use cpm as build tool which is explained in the next
+section.
+
+## Project file
+
+The best way to configure and build your project is by using project files with
+either `cpm` or
+[the Clean IDE on Windows](doc/2001_UserManual_Clean_IDE_for_Windows.pdf).
+
+You can create a Clean project file for your nitrile project using the commands:
 
 ```bash
 $ source env.bash  #  set the extended nitrile commands in your PATH
 $ nitrile-create-prj-file  HelloWorld
 ```
 
-which generates a `HelloWorld.prj` Clean project file for the project. Then you can
-build the project with cpm:
+which generates a `HelloWorld.prj` Clean project file for the project.
+
+Then you can build the project with cpm:
 
 ```bash
 $ nitrile-install-cpm  # by default cpm is not installed. This command only needs to be run once.
-$ cpm  HelloWorld      # build project with result in ./bin/HelloWorld
+$ cpm HelloWorld.prj   # build project with result in ./bin/HelloWorld
+$ ./bin/HelloWorld
+usage: HelloWorld  NAME
 ```
+
+The project file initially contains only Global and MainModule settings. When you
+compile the project with the project manager then ProjectModules settings are added
+containing settings for each module needed to build the project. Using the project
+file we can the apply settings specific for a module.
+
+Because it is so easy to recreate the project from you nitrile project it is best
+practice to put the `.prj` extension in `.gitignore` and just recreate the project
+file when cloning the repository on a new location. The `nitrile.yml` file is
+leading.
+
+Using a text editor we can easily change project settings in this project file. Most
+values are either a boolean 'True' or 'False', or an integer. Only for two
+configuration files you need to know the possible values it can have:
+
+- the field 'Application -> Output -> Output' can have values:
+  - BasicValuesOnly - Show only basic values without constructors.
+  - NoReturnType - Disable displaying the result of the application.
+  - NoConsole - No console (output window) for the program will be provided and the
+    result of the Start function will not be displayed
+  - ShowConstructors - Show values with constructors.
+- the field 'Application -> Output -> Module -> Compiler -> ListTypes' can have
+  values:
+  - NoTypes - No type or strictness information is displayed
+  - InferredTypes - Listing only the inferred types. Strictness information is not
+    displayed.
+  - StrictExportTypes - The types of functions that are exported are displayed
+    including inferred strictness information, but only when the type in the
+    definition module does not contain the same strictness information as was found
+    by the strictness analyser. This way it is easy to check for all functions if all
+    strictness information is exported.
+  - AllTypes - The types of all functions including strictness information are
+    displayed.
+
+You can also edit the project easily with a GUI interface on Windows using the Clean
+IDE, see the
+[User Manual for Clean IDE on Windows](doc/2001_UserManual_Clean_IDE_for_Windows.pdf).
 
 ## Try out more examples
 
@@ -151,6 +201,8 @@ missing functionality to nitrile:
 
     nitrile-version   - list the version of nitrile and the version of the
                         clean compiler,runtime,lib,stdenv,code-generator,clm
+    nitrile-cleanup  -  Cleanup project and optionally the clean distribution
+                        installed in the nitrile-packages/ folder in the project.
     nitrile-list      - list packages installed in the current project
                         with their version numbers
     nitrile-registry  - list packages in the registry with their
@@ -240,7 +292,183 @@ programming language.
 
 ## Setup Development environment
 
-## Cpm and CleanIDE
+There are multiple ways to setup your development environment:
+
+- using a pre-setup devcontainer, this gives you
+
+  - a quick start in developing,
+  - nice Clean language support in vscode, and
+  - you can run it on all platforms.
+
+- using a local installation of Clean
+
+  - no docker needed, but you must do the installation
+  - use the vscode editor for Clean, however it must be noted that the language
+    server for Clean is currently only available for Linux
+  - use the classic CleanIDE. The CleanIDE is a Windows application but can also be
+    run with wine on Linux and MacOS.
+
+The `nitrile` tool is both a package manager and a build tool (using `clm` inside).
+When using `nitrile` as package manager, we then have a choice in build tool:
+
+- `cpm`\
+   In all development environments we always can build the project with the `cpm`
+  commandline tool.
+- `nitrile`\
+   Only on a local x64 Linux/Windows and the devcontainer(x64 Linux) we can use
+  `nitrile` for building the project. Building locally with `nitrile` on MacOS is not
+  supported.
+
+For editing you can use VsCode or the CleanIDE.
+
+For getting started quickly with support on all platforms we advice to use the vscode
+devcontainer, however this quick start assumes that you already have docker
+installed, otherwise it might be faster to just do a local installation.
+
+VsCode is a more modern editor giving you all new features, but the classic CleanIDE
+gives better language support. So probably you can use both tools and use each for
+what they are better in.
+
+### Pre-setup DevContainer in VsCode
+
+**Quick**
+
+- open a bash shell. For Windows install https://gitforwindows.org and run "Git
+  Bash".
+- run:
+
+  ```bash
+  git clone https://github.com/harcokuppens/clean-nitrile-helloworld
+  cd clean-nitrile-helloworld
+  code .
+  ```
+
+- when vscode opens then say yes to "open devcontainer" dialog
+- then open a Terminal within vscode and run:
+
+  - for a nitrile build
+    ```bash
+    nitrile build
+    bin/HelloWorld
+    ```
+  - for a cpm build
+    ```bash
+    source env.bash                       # needs to be done only once (per shell)
+    nitrile-install-cpm                   # needs to be done only once
+    nitrile-create-prj-file  HelloWorld   # needs to be done only once
+    cpm HelloWorld.prj
+    bin/HelloWorld
+    ```
+
+- In vscode you can edit the code with the following features::
+  - syntax highlighting
+  - jump to definition or declaration
+  - autocomplete
+  - automatic underlining of problematic code
+- Note we assumed here that Docker and VsCode are already installed.
+
+**More details**
+
+This project can be used using a devcontainer which automatically setups a
+development environment with a 'nitrile' clean installation from
+https://clean-lang.org/ for you in a docker container from which you can directly
+start developing with vscode with nice Clean language support. For installation
+instructions see the
+[VSCode Development Environment Installation Guide](./DevContainer.md) Please note
+that the devcontainer is built specifically for the `x64` architecture. Nevertheless,
+it works seamlessly on Mac and Windows machines with the `ARM64` architecture thanks
+to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
+
+### Local installation
+
+You offcourse can use this project also direclty on your local machine by installing
+Clean from https://clean.cs.ru.nl/ yourself.
+
+#### Quick
+
+- open a bash shell. For Windows install https://gitforwindows.org and run "Git
+  Bash".
+- run:
+
+  - install nitrile using instructions from https://clean-lang.org/about.html#install
+
+    ```bash
+    # we assume linux here
+    curl https://clean-lang.org/install.sh | /bin/sh
+    ```
+
+  - clone project
+
+    ```bash
+    git clone https://github.com/harcokuppens/clean-nitrile-helloworld
+    cd clean-nitrile-helloworld
+    ```
+
+  - fetch dependencies for project using nitrile
+
+    ```bash
+    nitrile update   # updates the registry of available packages
+    nitrile fetch    # installs the required packages described in nitrile.yml
+                       # as dependencies in the local nitrile-packages/ folder
+    ```
+
+  - build
+
+    - with nitrile
+
+      ```bash
+      nitrile build
+      bin/HelloWorld
+      ```
+
+    - with cpm
+
+      ```bash
+      source env.bash                       # needs to be done only once (per shell)
+      nitrile-install-cpm                   # needs to be done only once
+      nitrile-create-prj-file  HelloWorld   # needs to be done only once
+      cpm HelloWorld.prj
+      bin/HelloWorld
+      ```
+
+#### More details
+
+- first check nitrile is supported on your platform at
+  [Platforms nitrile supports](#platforms-nitrile-supports)
+- nitrile only supports x64 Linux and x64 Windows
+- only vscode language server support on Linux, not supported on Windows.\
+  Reason: the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/)
+  is only available for Linux.
+- to install nitrile see https://clean-lang.org/about.html#install .
+- to use nitrile to install Clean and its libraries, and build Clean projects see
+  https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
+- add `bin-nitrile` to your path with `export PATH=$PWD/bin-nitrile:$PATH` \
+  This gives you access to the extra nitrile commands in this project.\
+  We assume however here that you have a bash shell, because the scripts in
+  `bin-nitrile` are bash scripts. To use them on Windows use the
+  https://gitforwindows.org installation which comes with a 'Git Bash' application to
+  open a bash shell.
+
+#### IDE support on local machine
+
+- **VsCode with Clean extension**\
+   only on x64 based Linux you can
+  [use vscode with Clean language support locally](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-windows-or-linux)\
+  Note: nitrile is also available on Windows, however currently there is no Eastwood package
+  for Windows, so currently only x64 Linux is supported. For other platforms you just
+  must use the VsCode devcontainer.
+- **classic Clean IDE**\
+  the classic CleanIDE can be run on all platforms (using Wine on linux/MacOS) and gives
+  better language support then the language server in vscode.
+
+The VsCode editor is a more modern editor giving you all new features, but the
+classic CleanIDE gives better language support. So probably you can use both tools
+and use each for what they are better in.
+
+
+
+
+## Cpm 
 
 Nitrile is great for installing dependencies, however instead of building with
 nitrile one can better create a Clean project file for your nitrile project for the
@@ -375,7 +603,7 @@ To start developing your project with a project file:
 
          wine bin/HelloWorld.exe
 
-### CleanIDE
+## Classic Clean IDE
 
 The CleanIDE is only available on Windows, however using wine you can nowadays run it
 fine on Linux and MacOS.
@@ -397,45 +625,66 @@ and you can directly run it with the following commands:
 
 within the CleanIDE you can build and run the project.
 
-## Nitrile as package manager and build tool
+For MacOS we even created an
+[`CleanIDE.app`](https://github.com/harcokuppens/clean-classic-helloworld/releases/download/macOS_application/CleanIDE.app.zip)
+which in the background runs the `CleanIDE.exe` with wine for you. It requires the
+`wine-stable` package to be installed with HomeBrew. Using this app you can open
+`.prj`,`dcl`, and `.icl` files from the Finder. For more details about `CleanIDE.app`
+see [CleanIDE-wine-app-MacOS](./resources/CleanIDE-wine-app-MacOS/README.md).
 
-### Nitrile in DevContainer
+### Navigation tips
 
-This project can be used using a devcontainer which automatically setups a
-development environment with nitrile and Clean for you in a docker container from
-which you can directly start developing with vscode with nice Clean language
-support.. For installation instructions see the
-[VSCode Development Environment Installation Guide](./DevContainer.md) Please note
-that the devcontainer is built specifically for the `x64` architecture. Nevertheless,
-it works seamlessly on Mac and Windows machines with the `ARM64` architecture thanks
-to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
+The following shortcuts make navigation your source code in the IDE much easier:
 
-We advice to use the vscode devcontainer because then you can
+**`Ctrl`+`double-click-word`**:\
+&emsp; searches for definition of word in project
 
-- quickly start developing,
-- nice Clean language support in vscode, and
-- you can run it on all platforms.
+**`Shift`+`Ctrl`+`double-click-word`**:\
+&emsp; searches for implementations of word in project
 
-### Nitrile on local machine
+**`select-word`** then press **`CTRL-=`**:\
+&emsp; searches for usage of word as identifier in the project
 
-However you offcourse can use this project on your local machine by installing
-nitrile and Clean yourself.
+**`no-selection`** then press **`CTRL-=`**:\
+&emsp; generic search menu for identifier/declaration/definition in the project\
+&emsp; By default shows last searched value in search box.
 
-- nitrile only supports x64 Linux and x64 Windows
-- only vscode language server support on Linux, not supported on Windows.\
-  Reason: the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/)
-  is only available for Linux.
-- to install nitrile see https://clean-lang.org/about.html#install .
-- to use nitrile to install Clean and its libraries, and build Clean projects see
-  https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
-- add `bin-nitrile` to your path with `export PATH=$PWD/bin-nitrile:$PATH` \
-  This gives you access to the extra nitrile commands in this project.\
-  We assume however here that you have a bash shell, because the scripts in
-  `bin-nitrile` are bash scripts. To use them on Windows use the
-  https://gitforwindows.org installation which comes with a 'Git Bash' application to
-  open a bash shell.
-- you can
-  [use vscode with Clean language support locally (Linux ONLY)](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-linux)
+**`select-module-name`** then press **`CTRL-D`**:\
+&emsp; opens this definition module
+
+**`select-module-name`** then press **`CTRL-I`**:\
+&emsp; opens this implementation module
+
+**`CTRL-/`**:\
+&emsp; toggle between implementation and definition module of the current module
+
+For more details read the
+[User Manual for Clean IDE on Windows](doc/2001_UserManual_Clean_IDE_for_Windows.pdf)
+
+### Important
+
+- Due to Wine limitations the MacOS application always launches a new Clean IDE
+  instance when opening a `.prj`, `.icl`, or `.dcl` file.
+- MacOS adds extra protection, called TCC, to some folders in your home directory,
+  eg. ~/Desktop ~/Documents. When opening a Clean file from one of these specially
+  protected folders you have to many times allow the same permission. Somehow the
+  permission does not stick in wine. This is annoying. A good work around is by not
+  putting your Clean project in such protected folder.
+
+  Instead of putting your CleanIDE project in:
+
+        ~/Documents/CleanIDE_Projects/MyProject
+
+  Put it in:
+
+        ~/CleanIDE_Projects/MyProject
+
+- Remember that Wine is not perfect. Some Windows API's are not good implemented. For
+  example, on wine on MacOS, the project `examples/PlatformExamples/IPLookup.prj`
+  builds in the CleanIDE and runs, but does print the empty string. When you install
+  the MacOS version of Clean and build it with the commandline using `cpm` then it
+  works fine!
+
 
 ## Installation details
 
