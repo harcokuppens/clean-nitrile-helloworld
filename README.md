@@ -25,6 +25,7 @@ third party libraries.
 <!--ts-->
 <!-- prettier-ignore -->
    * [HelloWorld program](#helloworld-program)
+   * [Project file](#project-file)
    * [Try out more examples](#try-out-more-examples)
    * [Extended Nitrile commands](#extended-nitrile-commands)
    * [Clean documentation](#clean-documentation)
@@ -39,10 +40,12 @@ third party libraries.
          * [Quick](#quick)
          * [More details](#more-details)
          * [IDE support on local machine](#ide-support-on-local-machine)
-   * [Cpm and CleanIDE](#cpm-and-cleanide)
+   * [Cpm](#cpm)
       * [Cpm build on Linux/Windows with x64 architecture](#cpm-build-on-linuxwindows-with-x64-architecture)
       * [Cpm build using wine on MacOS/Linux for both x64 and ARM](#cpm-build-using-wine-on-macoslinux-for-both-x64-and-arm)
-      * [CleanIDE](#cleanide)
+   * [Classic Clean IDE](#classic-clean-ide)
+      * [Navigation tips](#navigation-tips)
+      * [Important](#important)
    * [Installation details](#installation-details)
       * [The Eastwood language server for vscode](#the-eastwood-language-server-for-vscode)
          * [use the Eastwood language server for vscode locally on x64 based Linux](#use-the-eastwood-language-server-for-vscode-locally-on-x64-based-linux)
