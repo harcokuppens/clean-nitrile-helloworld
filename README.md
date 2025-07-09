@@ -603,11 +603,10 @@ To start developing your project with a project file:
 
             nitrile-in-docker-fetch-windows-libs
 
-4.  install cpm for windows 
+4.  install cpm for windows
 
           # for windows or linux (arch x64)
-          nitrile-install-cpm --platform=windows --arch=x64
-
+          nitrile-install-cpm --platform windows --arch x64
 
 5.  then create a project file for the nitrile project, where we explicitly have to
     specify the windows platform with x64 architecture, because otherwise it tries to
@@ -657,7 +656,8 @@ For MacOS we even created an
 which in the background runs the `CleanIDE.exe` with wine for you. It requires the
 `wine-stable` package to be installed with HomeBrew. Using this app you can open
 `.prj`,`dcl`, and `.icl` files from the Finder. For more details about `CleanIDE.app`
-see [CleanIDE-wine-app-MacOS](https://github.com/harcokuppens/CleanIDE-wine-app-MacOS).
+see
+[CleanIDE-wine-app-MacOS](https://github.com/harcokuppens/CleanIDE-wine-app-MacOS).
 
 ### Navigation tips
 
