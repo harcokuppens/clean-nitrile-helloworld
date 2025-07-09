@@ -603,7 +603,13 @@ To start developing your project with a project file:
 
             nitrile-in-docker-fetch-windows-libs
 
-4.  then create a project file for the nitrile project, where we explicitly have to
+4.  install cpm for windows 
+
+          # for windows or linux (arch x64)
+          nitrile-install-cpm 
+
+
+5.  then create a project file for the nitrile project, where we explicitly have to
     specify the windows platform with x64 architecture, because otherwise it tries to
     create a project for the current MacOS platform.
 
@@ -611,7 +617,7 @@ To start developing your project with a project file:
          nitrile-create-prj-file -p windows -a x64 HelloWorld
          # note: this script does not depend on the nitrile command
 
-5.  then build
+6.  finally build
 
          # building project with wine on MacOS
          wine-cpm  HelloWorld.prj

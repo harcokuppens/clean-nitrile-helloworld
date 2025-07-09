@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # exit at first unexpected error
 set -e
@@ -70,7 +70,7 @@ run_linux_commands() {
     CLEAN_URL="https://ftp.cs.ru.nl/Clean/Clean31/linux/clean3.1_64.tar.gz"
     curl -L -o "$TMP_FILE" "$CLEAN_URL" >/dev/null
     # tgz already contains clean/ folder so just unzip in project folder
-    tar -C "$OUTPUT_DIR"   --strip-components 2  -xzvf "$TMP_FILE" "clean/bin/cpm">/dev/null
+    tar -C "$OUTPUT_DIR" --strip-components 2 -xzvf "$TMP_FILE" "clean/bin/cpm" >/dev/null
     rm -r "$TMP_DIR"
 }
 
