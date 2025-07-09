@@ -502,8 +502,10 @@ following reasons:
 
 To start developing your project with a project file:
 
-1.  set environment in bash shell
+1.  clone repo and setup environment in bash shell
 
+          git clone https://github.com/harcokuppens/clean-nitrile-helloworld
+          cd clean-nitrile-helloworld
           source env.bash
 
 2.  optionally clean any old nitrile builds/installation
@@ -555,8 +557,10 @@ To start developing your project with a project file:
     for Linux you can install wine with your specific Linux platform's package
     manager.
 
-1.  set environment in bash shell
+1.  clone repo and setup environment in bash shell
 
+          git clone https://github.com/harcokuppens/clean-nitrile-helloworld
+          cd clean-nitrile-helloworld
           source env.bash
 
 2.  optionally clean any old nitrile builds/installation
@@ -597,7 +601,7 @@ To start developing your project with a project file:
 
         which is also run by the special nitrile command:
 
-            nitrile-in-docker-fetch-windows-libs 
+            nitrile-in-docker-fetch-windows-libs
 
 4.  then create a project file for the nitrile project, where we explicitly have to
     specify the windows platform with x64 architecture, because otherwise it tries to
