@@ -1,4 +1,4 @@
-# HelloWorld Clean console application build using nitrile
+# HelloWorld Clean console application build using Nitrile
 
 This is a Clean example project that uses a Clean distribution installed with the
 `nitrile` tool. The project includes a simple “Hello, World!” console application,
