@@ -127,14 +127,13 @@ case "$PLATFORM" in
         windows_path="$(
             cygpath -w "$file_path" 2>/dev/null
         )"
-        "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" "$windows_path" 2>/dev/null
+        "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" "$windows_path"
     else
-        "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" 2>/dev/null
+        "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe"
     fi
-    "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe"
     ;;
-*)
 
+*)
     # check wine installed
     check-required-cmds wine || exit $?
     # run the wine CleanIDE
@@ -153,9 +152,9 @@ case "$PLATFORM" in
         windows_path="$(
             winepath -w "$file_path" 2>/dev/null
         )"
-        wine "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" "$windows_path" 2>/dev/null
+        wine "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" "$windows_path"
     else
-        wine "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" 2>/dev/null
+        wine "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe"
     fi
 
     ;;
