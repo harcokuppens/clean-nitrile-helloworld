@@ -6,12 +6,10 @@ but it can also serve as a template for building other projects using `nitrile`.
 
 There is also a similar repository where we build the same HelloWorld Clean code
 using the 'classic' Clean distribution from https://clean.cs.ru.nl/ at
-https://github.com/harcokuppens/clean-classic-helloworld.git which builds the Clean
-code using `cpm` directly instead of with `nitrile build` .
-
-In this example project we extended nitrile to also generate a Clean project file
-from the nitrile project. The Clean project file gives us then the ability for more
-advanced builds with `cpm` or editing with the CleanIDE.
+https://github.com/harcokuppens/clean-classic-helloworld.git which uses a Clean
+project file which is build using a project manager tool `cpm` instead of with
+`nitrile build`. We can also open this Clean project file with the CleanIDE giving us
+an advanced editing and building tool for Clean projects.
 
 Compared to the 'classic' Clean distribution, the nitrile tool gives you a modern way
 to install the Clean compiler/runtime and its libraries as versioned packages from an
@@ -19,6 +17,12 @@ online package repository. Everything is versioned, allowing you to rebuild your
 project with the exact same version of compiler/runtime and libraries. The nitrile
 repository allows for per library version updates, and gives more easily support for
 third party libraries.
+
+In this example project we extended nitrile to also generate a Clean project file
+from the nitrile project. The Clean project file then gives us then the ability for
+more advanced builds with `cpm` or editing with the CleanIDE. The nitrile package
+manager gives use a modern way to install the Clean tools and packages. Combining
+nitrile with Clean project files gives us the best of both worlds.
 
 **Table of Contents**
 
@@ -634,10 +638,10 @@ To start developing your project with a project file:
 The CleanIDE is only available on Windows, however using wine you can nowadays run it
 fine on MacOS.
 
-Using wine on Linux it works ok, but not perfect. For example under linux when you run a console
-application, then it doesn't open a console, but instead the console output goes to
-the terminal which launches the CleanIDE. Also there are problems with 4k monitors,
-where everything is shown very small. I find this pretty annoying.
+Using wine on Linux it works ok, but not perfect. For example under linux when you
+run a console application, then it doesn't open a console, but instead the console
+output goes to the terminal which launches the CleanIDE. Also there are problems with
+4k monitors, where everything is shown very small. I find this pretty annoying.
 
 Below we describe per operating system how to use the CleanIDE:
 
