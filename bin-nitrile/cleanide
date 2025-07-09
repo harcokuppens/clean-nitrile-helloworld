@@ -125,7 +125,7 @@ case "$PLATFORM" in
     if [ "$#" -gt 0 ]; then
         file_path="$1"
         windows_path="$(
-            cygpath -w "$file_path" 2>/dev/null
+            cygpath -a -w "$file_path" 2>/dev/null
         )"
         "$PROJECT_DIR/bin-nitrile/prj/windows-x64/CleanIDE.exe" "$windows_path"
     else
