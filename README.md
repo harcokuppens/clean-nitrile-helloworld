@@ -606,7 +606,7 @@ To start developing your project with a project file:
 4.  install cpm for windows 
 
           # for windows or linux (arch x64)
-          nitrile-install-cpm 
+          nitrile-install-cpm --platform=windows --arch=x64
 
 
 5.  then create a project file for the nitrile project, where we explicitly have to
