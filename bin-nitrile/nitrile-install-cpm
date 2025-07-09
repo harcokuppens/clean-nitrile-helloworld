@@ -187,7 +187,7 @@ case "$PLATFORM" in
     ;;
 "WINDOWS"* | "MINGW"* | "CYGWIN"* | "MSYS"*) # Git Bash, Cygwin, MSYS op Windows
     run_windows_commands "$ARCH"
-    CPM_PATH="$PROJECT_DIR/bin-nitrile/prj/windows-x64/cpm"
+    CPM_PATH="$PROJECT_DIR/bin-nitrile/prj/windows-x64/cpm.exe"
     if [[ -x "$CPM_PATH" ]]
     then
       echo "succesfully installed '$CPM_PATH'"
