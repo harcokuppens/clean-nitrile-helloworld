@@ -54,31 +54,24 @@ DESCRIPTION
 
 # Functie om commando's uit te voeren voor Linux
 run_linux_commands() {
-    echo "--- Commands for Linux ($1) ---"
+    echo "--- Commands for Windows ($1) ---"
     if [ "$1" == "x86_64" ]; then
-        echo "Linux x64."
-        #cat /etc/os-release
-        # download and unzip clean
-        TMP_FILE="/tmp/clean$RANDOM.tgz"
-        CLEAN_URL="https://ftp.cs.ru.nl/Clean/Clean31/linux/clean3.1_64.tar.gz"
-        curl -L -o "$TMP_FILE" "$CLEAN_URL"
-        # tgz already contains clean/ folder so just unzip in project folder
-        tar -C "$PROJECT_DIR" -xzvf "$TMP_FILE"
-        rm "$TMP_FILE"
-        # build Clean
-        if make -C "$CLEAN_HOME"; then
-            # patch environments in Clean installation
-            mkdir -p clean/etc/
-            cp resources/IDEEnvs clean/etc/
-            echo "Succesfully installed Clean"
-        else
-            echo "ERROR: Something went wrong when installing Clean" 1>&2
-            exit 1
-        fi
+        echo " Linux x86_64."
     else
-        echo "ERROR: install not supported for this Linux architecture: $1" 1>&2
+        echo "ERROR: install not supported for this Windows architecture: $1" 1>&2
         exit 1
     fi
+    # download and unzip clean
+    OUTPUT_DIR="$PROJECT_DIR/bin-nitrile/prj/linux-x64/"
+    TMP_DIR="/tmp/clean$RANDOM"
+    mkdir -p "$TMP_DIR" "$OUTPUT_DIR"
+    #mkdir -p "$PROJECT_DIR/bin-nitrile/prj/linux-x64/"
+    TMP_FILE="$TMP_DIR/clean.tgz"
+    CLEAN_URL="https://ftp.cs.ru.nl/Clean/Clean31/linux/clean3.1_64.tar.gz"
+    curl -L -o "$TMP_FILE" "$CLEAN_URL" >/dev/null
+    # tgz already contains clean/ folder so just unzip in project folder
+    tar -C "$OUTPUT_DIR" -xzvf "$TMP_FILE" "clean/bin/cpm" --strip-components=2  >/dev/null 
+    rm -r "$TMP_DIR"
 }
 
 # Functie om commando's uit te voeren voor Windows (via Git Bash/WSL)
@@ -180,12 +173,28 @@ case "$PLATFORM" in
     ;;
 "LINUX")
     run_linux_commands "$ARCH"
+    CPM_PATH="$PROJECT_DIR/bin-nitrile/prj/linux-x64/cpm"
+    if [[ -x "$CPM_PATH" ]]
+    then
+      echo "succesfully installed '$CPM_PATH'"
+    else 
+      echo "failed installing cpm"
+      exit 1
+    fi  
     # install the CleanIDE environment for nitrile with relative paths to nitrile installed Clean compiler/linker and code generator
-    mkdir -p "$PROJECT_DIR/bin-nitrile/prj/windows-x64/etc"
+    mkdir -p "$PROJECT_DIR/bin-nitrile/prj/linux-x64/etc"
     cp -r "$PROJECT_DIR/bin-nitrile/resources/etc/IDEEnvs" "$PROJECT_DIR/bin-nitrile/prj/linux-x64/etc/"
     ;;
 "WINDOWS"* | "MINGW"* | "CYGWIN"* | "MSYS"*) # Git Bash, Cygwin, MSYS op Windows
     run_windows_commands "$ARCH"
+    CPM_PATH="$PROJECT_DIR/bin-nitrile/prj/windows-x64/cpm"
+    if [[ -x "$CPM_PATH" ]]
+    then
+      echo "succesfully installed '$CPM_PATH'"
+    else 
+      echo "failed installing cpm"
+      exit 1
+    fi  
     # install the CleanIDE environment for nitrile with relative paths to nitrile installed Clean compiler/linker and code generator
     mkdir -p "$PROJECT_DIR/bin-nitrile/prj/windows-x64/Config"
     cp -r "$PROJECT_DIR/bin-nitrile/resources/Config/IDEEnvs" "$PROJECT_DIR/bin-nitrile/prj/windows-x64/Config/"
