@@ -570,7 +570,7 @@ To start developing your project with a project file:
 
 3.  first fetch all nitrile libs for windows-x64 platform
 
-    On x86 Linux nitrile is supported, so we can run the following commands there to
+    On x64 Linux nitrile is supported, so we can run the following commands there to
     install the nitrile libs for windows-x64 platform:
 
            nitrile update
