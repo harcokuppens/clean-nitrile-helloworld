@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e
+
+USAGE="
+NAME
+   
+    nitrile-in-docker-fetch-windows-libs  -  fetch nitrile libraries for Windows platform using nitrile docker image
+
+SYNOPSIS
+
+    nitrile-in-docker-fetch-windows-libs [-h|--help|help] 
+
+DESCRIPTION 
+
+    Nitrile is not supported, on MacOS or Linux with ARM architecture, but you can still 
+    build and develop a nitrile project as a windows project in wine. Installing nitrile 
+    on wine is difficult, however we have a trick: use the linux nitrile in docker to 
+    install the nitrile libraries for windows, and then build with the windows cpm tool. 
+    We can then build a nitrile project without needing the nitrile executable.
+
+    This script fetches the nitrile libraries for Windows platform by running the 
+    following nitrile command in the linux docker image:
+
+        nitrile update && nitrile  fetch --platform=windows --arch=x64
+
+    Because the project folder is  bind mounted in the docker container the
+    library files are installed in the local project directory.
+
+    The full command run by this script is:
+
+        docker run -w /workspace --mount type=bind,src=\"\$(nitrile-root)\",target=/workspace \\
+          cleanlang/nitrile  bash -c \"nitrile update && nitrile  fetch --platform=windows --arch=x64\"
+
+    With the option '-h' or '--help' or argument 'help' it displays this usage message.
+
+"
+if [[ "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]]; then
+    echo "$USAGE"
+    exit 0
+fi
+
+docker run -w /workspace --mount type=bind,src="$(nitrile-root)",target=/workspace \
+    cleanlang/nitrile bash -c "nitrile update && nitrile  fetch --platform=windows --arch=x64 "

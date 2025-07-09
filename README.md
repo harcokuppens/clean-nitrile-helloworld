@@ -37,7 +37,7 @@ third party libraries.
    * [Setup Development environment](#setup-development-environment)
       * [Pre-setup DevContainer in VsCode](#pre-setup-devcontainer-in-vscode)
       * [Local installation](#local-installation)
-         * [Quick](#quick)
+         * [Quick : nitrile for x64 Linux and x64 Windows](#quick--nitrile-for-x64-linux-and-x64-windows)
          * [More details](#more-details)
          * [IDE support on local machine](#ide-support-on-local-machine)
    * [Cpm](#cpm)
@@ -387,18 +387,20 @@ to Docker Desktop’s support for `QEMU` emulation for `ARM64`.
 You offcourse can use this project also direclty on your local machine by installing
 Clean from https://clean.cs.ru.nl/ yourself.
 
-#### Quick
+#### Quick : nitrile for x64 Linux and x64 Windows
 
 - open a bash shell. For Windows install https://gitforwindows.org and run "Git
   Bash".
 - run:
 
   - install nitrile using instructions from https://clean-lang.org/about.html#install
+    \
+    note: nitrile only supports x64 Linux and x64 Windows
 
-    ```bash
-    # we assume linux here
-    curl https://clean-lang.org/install.sh | /bin/sh
-    ```
+    **IMPORTANT**: on platforms where nitrile is not supported, however using a trick
+    you can still fetch the windows nitrile libraries and build a nitrile project
+    using cpm on wine. See
+    [Cpm build using wine on MacOS/Linux for both x64 and ARM](#cpm-build-using-wine-on-macoslinux-for-both-x64-and-arm).
 
   - clone project
 
@@ -434,23 +436,34 @@ Clean from https://clean.cs.ru.nl/ yourself.
       bin/HelloWorld
       ```
 
+We also have instructions for building locally building nitrile projects using cpm:
+
+- [Cpm build on Linux/Windows with x64 architecture](#cpm-build-on-linuxwindows-with-x64-architecture)
+- [Cpm build using wine on MacOS/Linux for both x64 and ARM](#cpm-build-using-wine-on-macoslinux-for-both-x64-and-arm)
+
 #### More details
 
-- first check nitrile is supported on your platform at
+- nitrile only supports x64 Linux and x64 Windows; see
   [Platforms nitrile supports](#platforms-nitrile-supports)
-- nitrile only supports x64 Linux and x64 Windows
-- only vscode language server support on Linux, not supported on Windows.\
-  Reason: the [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/)
-  is only available for Linux.
 - to install nitrile see https://clean-lang.org/about.html#install .
-- to use nitrile to install Clean and its libraries, and build Clean projects see
+- see also the getting started nitrile documentation at
   https://clean-and-itasks.gitlab.io/nitrile/intro/getting-started/
-- add `bin-nitrile` to your path with `export PATH=$PWD/bin-nitrile:$PATH` \
+- by running in a bash shell
+
+       source env.bash
+
+  you add the `bin-nitrile` to your path with `export PATH=$PWD/bin-nitrile:$PATH` \
   This gives you access to the extra nitrile commands in this project.\
   We assume however here that you have a bash shell, because the scripts in
   `bin-nitrile` are bash scripts. To use them on Windows use the
   https://gitforwindows.org installation which comes with a 'Git Bash' application to
   open a bash shell.
+
+- in vscode the Eastwood language server gives language support for the Clean
+  language. However the
+  [Eastwood language server nitrile package](https://clean-lang.org/pkg/eastwood/) is
+  only available for Linux. So only on Linux vscode has support for the Clean
+  language.\\ This is probably caused by the focus on the devcontainer running Linux.
 
 #### IDE support on local machine
 
@@ -468,10 +481,7 @@ The VsCode editor is a more modern editor giving you all new features, but the
 classic CleanIDE gives better language support. So probably you can use both tools
 and use each for what they are better in.
 
-
-
-
-## Cpm 
+## Cpm
 
 Nitrile is great for installing dependencies, however instead of building with
 nitrile one can better create a Clean project file for your nitrile project for the
@@ -576,14 +586,18 @@ To start developing your project with a project file:
         nitrile. With the linux nitrile command you can then fetch the Windows
         nitrile libraries in the binded mounted project directory with the command:
 
-               nitrile update
-               nitrile fetch  --platform=windows --arch=x64
+            nitrile update
+            nitrile fetch  --platform=windows --arch=x64
 
     2.  or you can do this also directly without launching the devcontainer in vscode
         with the docker command:
 
-                docker run -w /workspace --mount type=bind,src=\"\$(pwd)\",target=/workspace \
-                  cleanlang/nitrile  bash -c \"nitrile update && nitrile  fetch --platform=windows
+            docker run -w /workspace --mount type=bind,src="$(pwd)",target=/workspace \
+              cleanlang/nitrile  bash -c "nitrile update && nitrile  fetch --platform=windows --arch=x64"
+
+        which is also run by the special nitrile command:
+
+            nitrile-in-docker-fetch-windows-libs 
 
 4.  then create a project file for the nitrile project, where we explicitly have to
     specify the windows platform with x64 architecture, because otherwise it tries to
@@ -687,7 +701,6 @@ For more details read the
   builds in the CleanIDE and runs, but does print the empty string. When you install
   the MacOS version of Clean and build it with the commandline using `cpm` then it
   works fine!
-
 
 ## Installation details
 
