@@ -632,7 +632,12 @@ To start developing your project with a project file:
 ## Classic Clean IDE
 
 The CleanIDE is only available on Windows, however using wine you can nowadays run it
-fine on Linux and MacOS.
+fine on MacOS.
+
+On Linux it works, but not perfect. For example under linux when you run a console
+application, then it doesn't open a console, but instead the console output goes to
+the terminal which launches the CleanIDE. Also there are problems with 4k monitors,
+where everything is shown very small. I find this pretty annoying.
 
 Below we describe per operating system how to use the CleanIDE:
 
